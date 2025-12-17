@@ -249,6 +249,7 @@ export default function NavBar(){
                 profileClick && 
                 <div className="fixed inset-0 z-50 flex flex-col justify-center backdrop-blur-sm items-center">
                     <div className="select-none font-sans bg-gradient-to-br from-blue-100 via-purple-200 to-purple-100 rounded-xl shadow-xl p-5 border border-blue-700">
+                    <h1 onClick={() => setProfileClick(false)} className="flex justify-end hover:cursor-pointer">❌</h1>
                     <p className="text-lg text-blue-900">Welcome, {username}</p>
                     <p className="text-lg text-blue-900">{email}</p>
                     <div className="flex justify-center "><button onClick={() => {setProfileClick(false);handleLogout()}} className="bg-red-500 text-white rounded-xl mt-2 p-2 hover:bg-red-600 hover:scale-105 hover:cursor-pointer transition duration-300 ease-in-out">Logout</button></div>

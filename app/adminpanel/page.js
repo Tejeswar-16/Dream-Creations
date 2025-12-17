@@ -6,7 +6,7 @@ import { BsPersonSquare } from "react-icons/bs";
 import Image from "next/image";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 
 export default function AdminPanel(){
 
@@ -19,6 +19,7 @@ export default function AdminPanel(){
     const [prodDesc,setProdDesc] = useState("");
     const [actualPrice,setActualPrice] = useState("");
     const [discPrice,setDiscPrice] = useState("");
+    const [images,setImages] = useState([]);
 
     const router = useRouter();
 
@@ -27,12 +28,39 @@ export default function AdminPanel(){
             if (user){
                 setUserName(user.displayName);
                 setEmail(user.email);
+                if (user.email !== "admin@kanavucreations.in")      
+                    router.push("/");
             }
             else{
                 router.push("/");
             }
         });
     });
+
+    function handleImageChange(e){
+        setImages([...e.target.files]);
+    }
+
+    async function uploadImages(){
+        const uploadedUrls = [];
+        for (const image of images){
+            const formData = new FormData();
+            formData.append("file",image);
+            formData.append("upload_preset",process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET);
+            
+            const res = await fetch(
+                `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+                {
+                    method: "POST",
+                    body: formData,
+                }
+            );
+
+            const data = await res.json();
+            uploadedUrls.push(data.secure_url);
+        }
+        return uploadedUrls;
+    }
 
     async function handleLogout(){
         try{
@@ -49,12 +77,15 @@ export default function AdminPanel(){
         try
         {
             setLoading(true);
+            const imageUrls = await uploadImages();
             await addDoc(collection(db,"products"),{
                 id: Date.now() + Math.floor(Math.random()*1000),
                 productName: prodName,
                 productDescription: prodDesc,
                 actualPrice: actualPrice,
-                discountPrice: discPrice
+                discountPrice: discPrice,
+                images: imageUrls,
+                createdAt: serverTimestamp()
             });
             alert("Product added successfully!");
             setProdName("");setProdDesc("");setActualPrice("");setDiscPrice("");
@@ -128,7 +159,7 @@ export default function AdminPanel(){
                                 <div className="flex justify-center"><textarea value={prodDesc} onChange={(e) => setProdDesc(e.target.value)} required  className="font-sans w-100 border rounded-xl p-2 mt-4 border-blue-900 text-blue-900 font-semibold" placeholder="Product Description"/></div>
                                 <div className="flex justify-center"><input value={actualPrice} onChange={(e) => setActualPrice(e.target.value)} required  type="number" className="font-sans w-100 border rounded-xl p-2 mt-4 border-blue-900 text-blue-900 font-semibold" placeholder="Actual Price"/></div>
                                 <div className="flex justify-center"><input value={discPrice} onChange={(e) => setDiscPrice(e.target.value)} required  type="number" className="font-sans w-100 border rounded-xl p-2 mt-4 border-blue-900 text-blue-900 font-semibold" placeholder="Discount Price"/></div>
-                                <div className="flex justify-center"><input required  type="file" className="font-sans ml-30 md:ml-6 rounded-xl p-2 mt-4 text-blue-900 font-semibold hover:cursor-pointer" placeholder="Product Name"/></div>
+                                <div className="flex justify-center"><input onChange={handleImageChange} required type="file" accept="image/*" multiple className="font-sans ml-30 md:ml-6 rounded-xl p-2 mt-4 text-blue-900 font-semibold hover:cursor-pointer" placeholder="Product Name"/></div>
                                 <div className="flex justify-center"><button className="flex justify-center font-sans mt-6 font-bold w-25 rounded-xl shadow-xl p-2 border-2 border-blue-900 hover:bg-blue-900 hover:text-fuchsia-100 hover:scale-110 hover:cursor-pointer transtion duration-300 ease-in-out">Add</button></div>
                             </form>
                         </div>
