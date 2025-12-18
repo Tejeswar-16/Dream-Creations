@@ -3,14 +3,13 @@ import { FaInstagram } from "react-icons/fa";
 import { GrYoutube } from "react-icons/gr";
 import { IoMdMail } from "react-icons/io";
 import Image from "next/image";
-import Link from "next/link";
 
-export default function Footer(){
+export default function Footer({footRef}){
     const subject = "Product Inquiry";
     const body = "Hi, I am interested in your products.";
     return (
         <>
-            <div className="relative bg-gradient-to-b from-pink-100 via-pink-200 to-blue-100 py-1">
+            <div ref={footRef} className="relative bg-gradient-to-b from-pink-100 via-pink-200 to-blue-100 py-1">
                 <div className="flex flex-col md:flex-row gap-y-4 mb-2">
                     <div className="flex flex-col items-center gap-y-4 justify-center flex-1">
                         <div className="flex flex-row items-center gap-x-4">

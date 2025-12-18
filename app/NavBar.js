@@ -9,7 +9,7 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { auth } from ".//_util/config.js"
 import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut, updateProfile } from "firebase/auth";
 
-export default function NavBar(){
+export default function NavBar({footRef}){
     const [home,setHome] = useState(true);
     const [about,setAbout] = useState(false);
     const [shop,setShop] = useState(false);
@@ -31,6 +31,10 @@ export default function NavBar(){
     const [profileClick,setProfileClick] = useState(false);
 
     const router = useRouter();
+
+    const scrollToFooter = () => {
+        footRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
 
     const handleNav = (item) => {
         setHome(item === "home");
@@ -119,7 +123,7 @@ export default function NavBar(){
 
     return (
         <>
-            <div className="sticky top-0 mx-auto my-4 p-1 md:p-4 rounded-xl border-blue-700 border-t-4 border-r-3 border-l-3 border-b-2 bg-gradient-to-b from-blue-200 via-purple-100 to-purple-100 w-77 md:w-190 lg:w-250 xl:w-350">
+            <div className="z-25 sticky top-0 mx-auto my-4 p-1 md:p-4 rounded-xl border-blue-700 border-t-4 border-r-3 border-l-3 border-b-2 bg-gradient-to-b from-blue-200 via-purple-100 to-purple-100 w-77 md:w-190 lg:w-250 xl:w-350">
                 <div className="flex flex-row justify-between items-center">
                     <div onClick={() => router.push("/")} className="hover:cursor-pointer"><Image className="w-14" src={"/logo.png"} width={70} height={20} alt="logo"></Image></div>
                     
@@ -133,7 +137,7 @@ export default function NavBar(){
                         <div onClick={() => {router.push("/");handleNav("home")}} className={home ? "bg-gradient-to-b from-blue-200 to-purple-100 rounded-xl p-2 font-semibold text-blue-900 hover:cursor-pointer hover:scale-105 transition duration-300 ease-in-out md:text-sm lg:text-lg" : "md:text-sm lg:text-lg p-2 text-blue-900 font-semibold hover:cursor-pointer hover:scale-105 transition duration-300 ease-in-out"}>Home</div>
                         <div onClick={() => {router.push("/");handleNav("about")}} className={about ? "bg-gradient-to-b from-blue-200 to-purple-100 rounded-xl p-2 font-semibold text-blue-900 hover:cursor-pointer hover:scale-105 transition duration-300 ease-in-out md:text-sm lg:text-lg" : "md:text-sm lg:text-lg p-2 text-blue-900 font-semibold hover:cursor-pointer hover:scale-105 transition duration-300 ease-in-out"}>About</div>
                         <div onClick={() => {router.push("/");handleNav("shop")}} className={shop ? "bg-gradient-to-b from-blue-200 to-purple-100 rounded-xl p-2 font-semibold text-blue-900 hover:cursor-pointer hover:scale-105 transition duration-300 ease-in-out md:text-sm lg:text-lg" : "md:text-sm lg:text-lg p-2 text-blue-900 font-semibold hover:cursor-pointer hover:scale-105 transition duration-300 ease-in-out"}>Shop</div>
-                        <div onClick={() => {router.push("/");handleNav("contact")}} className={contact ? "bg-gradient-to-b from-blue-200 to-purple-100 rounded-xl p-2 font-semibold text-blue-900 hover:cursor-pointer hover:scale-105 transition duration-300 ease-in-out md:text-sm lg:text-lg" : "md:text-sm lg:text-lg p-2 text-blue-900 font-semibold hover:cursor-pointer hover:scale-105 transition duration-300 ease-in-out"}>Contact</div>
+                        <div onClick={() => {scrollToFooter();handleNav("contact")}} className={contact ? "bg-gradient-to-b from-blue-200 to-purple-100 rounded-xl p-2 font-semibold text-blue-900 hover:cursor-pointer hover:scale-105 transition duration-300 ease-in-out md:text-sm lg:text-lg" : "md:text-sm lg:text-lg p-2 text-blue-900 font-semibold hover:cursor-pointer hover:scale-105 transition duration-300 ease-in-out"}>Contact</div>
                     </div>
 
                     <div className="flex flex-col md:flex-row gap-x-8 items-center">
@@ -158,7 +162,7 @@ export default function NavBar(){
                                 <GiHamburgerMenu onClick={() => setMenuOpen(!menuOpen)} className="text-blue-900" size={25}/>
                             </div>
                         </div>
-                        <div className="flex flex-row hover:cursor-pointer hover:scale-105 transition duration-300 ease-in-out">
+                        <div onClick={() => router.push("/cart")} className="flex flex-row hover:cursor-pointer hover:scale-105 transition duration-300 ease-in-out">
                             <MdOutlineShoppingCart className="text-blue-900" size={35}/>
                             <h1 className="select-none font-sans text-sm md:text-lg text-blue-900 font-bold mt-3">Cart</h1>
                         </div>
@@ -182,10 +186,10 @@ export default function NavBar(){
 
                 {/* Menu items */}
                 <div className="flex flex-col gap-4 px-6">
-                    <div onClick={() => { handleNav("home"); setMenuOpen(false); }} className={home ? "bg-gradient-to-b from-blue-200 to-purple-100 rounded-xl p-2 font-semibold text-blue-900 hover:cursor-pointer hover:scale-105 transition duration-300 ease-in-out md:text-sm lg:text-lg" : "md:text-sm lg:text-lg p-2 text-blue-900 font-semibold hover:cursor-pointer hover:scale-105 transition duration-300 ease-in-out"}>Home</div>
+                    <div onClick={() => { router.push("/");handleNav("home"); setMenuOpen(false); }} className={home ? "bg-gradient-to-b from-blue-200 to-purple-100 rounded-xl p-2 font-semibold text-blue-900 hover:cursor-pointer hover:scale-105 transition duration-300 ease-in-out md:text-sm lg:text-lg" : "md:text-sm lg:text-lg p-2 text-blue-900 font-semibold hover:cursor-pointer hover:scale-105 transition duration-300 ease-in-out"}>Home</div>
                     <div onClick={() => { handleNav("about"); setMenuOpen(false); }} className={about ? "bg-gradient-to-b from-blue-200 to-purple-100 rounded-xl p-2 font-semibold text-blue-900 hover:cursor-pointer hover:scale-105 transition duration-300 ease-in-out md:text-sm lg:text-lg" : "md:text-sm lg:text-lg p-2 text-blue-900 font-semibold hover:cursor-pointer hover:scale-105 transition duration-300 ease-in-out"}>About</div>
                     <div onClick={() => { handleNav("shop"); setMenuOpen(false); }} className={shop ? "bg-gradient-to-b from-blue-200 to-purple-100 rounded-xl p-2 font-semibold text-blue-900 hover:cursor-pointer hover:scale-105 transition duration-300 ease-in-out md:text-sm lg:text-lg" : "md:text-sm lg:text-lg p-2 text-blue-900 font-semibold hover:cursor-pointer hover:scale-105 transition duration-300 ease-in-out"}>Shop</div>
-                    <div onClick={() => { handleNav("contact"); setMenuOpen(false); }} className={contact ? "bg-gradient-to-b from-blue-200 to-purple-100 rounded-xl p-2 font-semibold text-blue-900 hover:cursor-pointer hover:scale-105 transition duration-300 ease-in-out md:text-sm lg:text-lg" : "md:text-sm lg:text-lg p-2 text-blue-900 font-semibold hover:cursor-pointer hover:scale-105 transition duration-300 ease-in-out"}>Contact</div>
+                    <div onClick={() => { scrollToFooter();handleNav("contact"); setMenuOpen(false); }} className={contact ? "bg-gradient-to-b from-blue-200 to-purple-100 rounded-xl p-2 font-semibold text-blue-900 hover:cursor-pointer hover:scale-105 transition duration-300 ease-in-out md:text-sm lg:text-lg" : "md:text-sm lg:text-lg p-2 text-blue-900 font-semibold hover:cursor-pointer hover:scale-105 transition duration-300 ease-in-out"}>Contact</div>
                 </div>
             </div>
 
@@ -221,8 +225,8 @@ export default function NavBar(){
                             <div className="flex flex-col">
                                 <input value={signUpName} onChange={(e) => setSignUpName((e.target.value).toUpperCase())} required className="font-sans p-2 rounded-lg m-4 text-blue-900 border border-blue-700 h-10" type="text" placeholder="Name"/>
                                 <input value={signUpEmail} onChange={(e) => {setSignUpEmail(e.target.value)}} required className="font-sans p-2 rounded-lg mx-4 text-blue-900 mb-4 border border-blue-700 h-10" type="email" placeholder="Email"/>
-                                <input value={signUpPassword} onChange={(e) => {setSignUpPassword(e.target.value);handlePasswordCheck(e.target.value,signUpConfirmPassword)}}required className="font-sans p-2 rounded-lg mx-4 mb-4 text-blue-900 border border-blue-700 h-10" type="password" placeholder="Password"/>
-                                <input value={signUpConfirmPassword} onChange={(e) => {setSignUpConfirmPassword(e.target.value);handlePasswordCheck(signUpPassword,e.target.value)}}required className="font-sans p-2 rounded-lg mx-4 text-blue-900 border border-blue-700 h-10" type="password" placeholder="Confirm Password"/>
+                                <input value={signUpPassword} onChange={(e) => {setSignUpPassword(e.target.value);handlePasswordCheck(e.target.value,signUpConfirmPassword)}} required className="font-sans p-2 rounded-lg mx-4 mb-4 text-blue-900 border border-blue-700 h-10" type="password" placeholder="Password"/>
+                                <input value={signUpConfirmPassword} onChange={(e) => {setSignUpConfirmPassword(e.target.value);handlePasswordCheck(signUpPassword,e.target.value)}} required className="font-sans p-2 rounded-lg mx-4 text-blue-900 border border-blue-700 h-10" type="password" placeholder="Confirm Password"/>
                                 <label className="font-sans mx-4 mt-2 text-sm text-red-500">{pwdError}</label>
                                 <button type="submit" className={(signUpName === "" || signUpEmail === "" || signUpPassword === "" || signUpConfirmPassword === "") ? "font-sans rounded-lg m-4 border-2 text-xl border-blue-900 bg-blue-900 text-purple-100 h-10 hover:cursor-not-allowed" : "font-sans rounded-lg m-4 text-purple-100 text-xl bg-blue-900 text-xl h-10 hover:cursor-pointer"}>Sign Up</button>
                             </div>
