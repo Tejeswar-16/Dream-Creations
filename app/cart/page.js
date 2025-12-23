@@ -82,7 +82,7 @@ export default function Cart(){
             <div className="relative bg-gradient-to-b from-purple-100 via-purple-100 to-blue-100 py-1 min-h-screen">
                 <NavBar footRef={footRef}/>
                 
-                <div className="mx-auto mb-10 w-75 md:w-150 rounded-xl p-2 border-t-4 border-r-2 border-l-2 border-b-1 border-blue-700 bg-gradient-to-br from-blue-200 via-blue-100 to-pink-100">
+                <div className="mx-auto mb-10 w-75 md:w-150 rounded-xl p-2 border-t-4 border-r-2 border-l-2 border-b-1 border-blue-700 bg-gradient-to-br from-blue-200 via-blue-100 to-pink-100 w-75 md:w-190 lg:w-250 xl:w-350">
                     <h1 className="select-none font-sans flex justify-center font-bold text-lg md:text-3xl text-blue-900 mb-4">Shopping Cart</h1>
                     
                     {
@@ -90,7 +90,7 @@ export default function Cart(){
                         ?
                             <h1 className="flex justify-center font-sans text-lg text-blue-900">Cart is empty</h1>
                         :
-                            <div className="overflow-hidden border border-gray-300 mx-auto overflow-x-auto border border-black">
+                            <div className="overflow-hidden border border-gray-300 mx-auto overflow-x-auto border border-black md:w-150">
                                 <table className="mx-auto text-center">
                                     <thead className="bg-blue-950 text-white">
                                         <tr>

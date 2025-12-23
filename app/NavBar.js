@@ -5,11 +5,10 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { MdOutlineShoppingCart  } from "react-icons/md";
 import { BsPersonSquare } from "react-icons/bs";
-import { GiHamburgerMenu } from "react-icons/gi";
 import { auth } from ".//_util/config.js"
 import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut, updateProfile } from "firebase/auth";
 
-export default function NavBar({footRef,shopping}){
+export default function NavBar({footRef}){
     const [home,setHome] = useState(true);
     const [about,setAbout] = useState(false);
     const [shop,setShop] = useState(false);
@@ -157,27 +156,6 @@ export default function NavBar({footRef,shopping}){
                 </div>
             </div>
 
-            <div className={`fixed top-0 right-0 h-full w-64 bg-white z-50
-                transform transition-transform duration-300 ease-in-out
-                ${menuOpen ? "translate-x-0" : "translate-x-full"}`}
-                >
-                {/* Close button */}
-                <div className="flex justify-end p-4">
-                    <button
-                    className="text-xl font-bold"
-                    onClick={() => setMenuOpen(false)}
-                    >
-                    ✕
-                    </button>
-                </div>
-
-                {/* Menu items */}
-                <div className="flex flex-col gap-4 px-6">
-                    <div onClick={() => { router.push("/");handleNav("home"); setMenuOpen(false); }} className={home ? "bg-gradient-to-b from-blue-200 to-purple-100 rounded-xl p-2 font-semibold text-blue-900 hover:cursor-pointer hover:scale-105 transition duration-300 ease-in-out md:text-sm lg:text-lg" : "md:text-sm lg:text-lg p-2 text-blue-900 font-semibold hover:cursor-pointer hover:scale-105 transition duration-300 ease-in-out"}>Home</div>
-                    <div onClick={() => { scrollToFooter();handleNav("contact"); setMenuOpen(false); }} className={contact ? "bg-gradient-to-b from-blue-200 to-purple-100 rounded-xl p-2 font-semibold text-blue-900 hover:cursor-pointer hover:scale-105 transition duration-300 ease-in-out md:text-sm lg:text-lg" : "md:text-sm lg:text-lg p-2 text-blue-900 font-semibold hover:cursor-pointer hover:scale-105 transition duration-300 ease-in-out"}>Contact</div>
-                </div>
-            </div>
-
             {
                 signIn && 
                 <div className="fixed inset-0 z-50 flex flex-col justify-center backdrop-blur-sm items-center">
@@ -241,7 +219,10 @@ export default function NavBar({footRef,shopping}){
                     <h1 onClick={() => setProfileClick(false)} className="flex justify-end hover:cursor-pointer">❌</h1>
                     <p className="text-lg text-blue-900">Welcome, {username}</p>
                     <p className="text-lg text-blue-900">{email}</p>
-                    <div className="flex justify-center "><button onClick={() => {setProfileClick(false);handleLogout()}} className="bg-red-500 text-white rounded-xl mt-2 p-2 hover:bg-red-600 hover:scale-105 hover:cursor-pointer transition duration-300 ease-in-out">Logout</button></div>
+                    <div className="flex flex-row gap-x-2 justify-center">
+                        <button onClick={() => {setProfileClick(false);router.push("/myorders")}} className="bg-green-500 text-white rounded-xl mt-2 p-2 hover:bg-green-700 hover:scale-105 hover:cursor-pointer transition duration-300 ease-in-out">My Orders</button>
+                        <button onClick={() => {setProfileClick(false);handleLogout()}} className="bg-red-500 text-white rounded-xl mt-2 p-2 hover:bg-red-600 hover:scale-105 hover:cursor-pointer transition duration-300 ease-in-out">Logout</button>
+                    </div>
                     </div>
                 </div>
             }

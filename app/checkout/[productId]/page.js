@@ -8,7 +8,7 @@ import { auth, db } from "../../_util/config";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import QRCode from "qrcode";
-import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import { addDoc, collection, getDocs, query, serverTimestamp, Timestamp, where } from "firebase/firestore";
 
 export default function Checkout(){
 
@@ -65,7 +65,10 @@ export default function Checkout(){
                 deliveryAddress: address.toUpperCase(),
                 deliveryCity: city.toUpperCase(),
                 deliveryState: state.toUpperCase(),
-                pincode: pincode
+                pincode: pincode,
+                status: "Pending",
+                date: new Date().getDate() + "-" + (new Date().getMonth() + 1) + "-" + new Date().getFullYear(),
+                timestamp: serverTimestamp() 
             });
 
             const upi = generateUPIQR({
@@ -165,6 +168,7 @@ export default function Checkout(){
                                         }
                                         <p className="select-none text-sm font-sans text-fuchsia-900 mt-2 font-semibold">UPI ID: lhema2889-1@okicici</p>
                                         <p className="select-none text-sm font-sans text-fuchsia-900 font-semibold">Name: Kanavu Creations</p>
+                                        <button onClick={() => router.push("/myorders")} className="flex justify-center mx-auto font-sans my-4 p-1 w-50 rounded-lg bg-blue-700 hover:bg-blue-800 cursor-pointer text-white transition duration-300 ease-in-out">Check Payment Status</button>
                                     </div>
                                 </div>
                         }

@@ -6,7 +6,7 @@ import { BsPersonSquare } from "react-icons/bs";
 import Image from "next/image";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
-import { addDoc, collection, getDocs, serverTimestamp } from "firebase/firestore";
+import { addDoc, collection, doc, getDocs, query, serverTimestamp, updateDoc, where } from "firebase/firestore";
 
 export default function AdminPanel(){
 
@@ -21,6 +21,10 @@ export default function AdminPanel(){
     const [discPrice,setDiscPrice] = useState("");
     const [images,setImages] = useState([]);
     const [orders,setOrders] = useState([]);
+    const [verification,setVerification] = useState(false);
+    const [productName,setProductName] = useState("");
+    const [customerName,setCustomerName] = useState("");
+    const [orderId,setOrderId] = useState("");
 
     const router = useRouter();
 
@@ -42,12 +46,15 @@ export default function AdminPanel(){
         async function fetchOrders(){
             try{
                 setLoading(true);
-                const q = collection(
-                    db,"orders"
+                const q = query(
+                    collection(db,"orders")
                 );
                 const querySnapshot = await getDocs(q);
-                const data = querySnapshot.docs.map((doc) => doc.data());
-                console.log(data);
+                let data = querySnapshot.docs.map((doc) => ({
+                    id: doc.id,
+                    ...doc.data()
+                }));
+                data = data.sort((x,y) => y.timestamp - x.timestamp);
                 setOrders(data);
                 setLoading(false);
             }
@@ -120,6 +127,34 @@ export default function AdminPanel(){
         }
     }
 
+    function handleVerification(orderId,productName,custName){
+        setProductName(productName);
+        setCustomerName(custName);
+        setOrderId(orderId);
+    }
+
+    async function handlePaymentVerification(received){
+        try{
+            setLoading(true);
+            const q = query(
+                collection(db,"orders"),
+                where("orderId","==",orderId)
+            );
+            const querySnapshot = await getDocs(q);
+            const docRef = querySnapshot.docs[0].ref;
+            await updateDoc(docRef,{
+                status: received ? "Payment Received" : "Payment not Received"
+            });
+            window.location.reload();
+        }
+        catch(error){
+            alert(error);
+        }
+        finally{
+            setLoading(false);
+        }
+    }
+
     return (
         <>
             <div className="relative bg-gradient-to-b from-purple-100 via-purple-100 to-blue-100 py-1 min-h-screen">
@@ -161,32 +196,34 @@ export default function AdminPanel(){
                                 <table className="mx-auto text-center">
                                     <thead className="bg-blue-950 text-white">
                                         <tr>
-                                            <th className="font-sans p-2 font-semibold border border-gray-400">Order ID</th>
                                             <th className="font-sans p-2 font-semibold border border-gray-400">Product Name</th>
-                                            <th className="font-sans p-2 font-semibold border border-gray-400">Qunatity</th>
-                                            <th className="font-sans p-2 font-semibold border border-gray-400">Cust. Name</th>
-                                            <th className="font-sans p-2 font-semibold border border-gray-400">Cust. Mobile</th>
-                                            <th className="font-sans p-2 font-semibold border border-gray-400">Cust. Email</th>
+                                            <th className="font-sans p-2 font-semibold border border-gray-400">Quantity</th>
+                                            <th className="font-sans p-2 font-semibold border border-gray-400">Date of Order</th>
+                                            <th className="font-sans p-2 font-semibold border border-gray-400">Customer Name</th>
+                                            <th className="font-sans p-2 font-semibold border border-gray-400">Customer Mobile</th>
+                                            <th className="font-sans p-2 font-semibold border border-gray-400">Customer Email</th>
                                             <th className="font-sans p-2 font-semibold border border-gray-400">Address</th>
                                             <th className="font-sans p-2 font-semibold border border-gray-400">City</th>
                                             <th className="font-sans p-2 font-semibold border border-gray-400">State</th>
                                             <th className="font-sans p-2 font-semibold border border-gray-400">Pincode</th>
+                                            <th className="font-sans p-2 font-semibold border border-gray-400">Payment Verification</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {
                                             orders.map((order,index) => (
                                                 <tr key={index} className="hover:bg-purple-100 transition duration-300 ease-in-out">
-                                                    <td className="font-sans text-sm md:text-lg p-2 border border-black">{order.orderId}</td>
-                                                    <td className="font-sans md:text-lg p-2 border border-black">{order.productName}</td>
-                                                    <td className="font-sans md:text-lg p-2 border border-black">{order.quantity}</td>
-                                                    <td className="font-sans md:text-lg p-2 border border-black">{order.customerName}</td>
-                                                    <td className="font-sans md:text-lg p-2 border border-black">{order.customerMobile}</td>
-                                                    <td className="font-sans md:text-lg p-2 border border-black">{order.customerEmail}</td>
-                                                    <td className="font-sans md:text-lg p-2 border border-black">{order.deliveryAddress}</td>
-                                                    <td className="font-sans md:text-lg p-2 border border-black">{order.deliveryCity}</td>
-                                                    <td className="font-sans md:text-lg p-2 border border-black">{order.deliveryState}</td>
-                                                    <td className="font-sans md:text-lg p-2 border border-black">{order.pincode}</td>
+                                                    <td className="font-sans p-2 border border-black">{order.productName}</td>
+                                                    <td className="font-sans p-2 border border-black">{order.quantity}</td>
+                                                    <td className="font-sans p-2 border border-black">{order.date}</td>
+                                                    <td className="font-sans p-2 border border-black">{order.customerName}</td>
+                                                    <td className="font-sans p-2 border border-black">{order.customerMobile}</td>
+                                                    <td className="font-sans p-2 border border-black">{order.customerEmail}</td>
+                                                    <td className="font-sans p-2 border border-black">{order.deliveryAddress}</td>
+                                                    <td className="font-sans p-2 border border-black">{order.deliveryCity}</td>
+                                                    <td className="font-sans p-2 border border-black">{order.deliveryState}</td>
+                                                    <td className="font-sans p-2 border border-black">{order.pincode}</td>
+                                                    <td className="font-sans p-2 border border-black"><button onClick={() => {setVerification(true);handleVerification(order.orderId,order.productName,order.customerName)}} className={order.status === "Pending" ? "bg-yellow-400 hover:cursor-pointer p-1 rounded-lg" : order.status === "Payment Received" ? "bg-green-500 text-white hover:cursor-pointer p-1 rounded-lg" : "bg-red-500 text-white hover:cursor-pointer p-1 rounded-lg"}>{order.status}</button></td>
                                                 </tr>
                                             ))
                                         }
@@ -197,9 +234,25 @@ export default function AdminPanel(){
                 </div>
 
                 {
+                    verification && 
+                    <div className="fixed inset-0 z-50 flex flex-col justify-center backdrop-blur-sm items-center">
+                        <div className="select-none font-sans bg-gradient-to-br from-blue-100 via-purple-200 to-purple-100 rounded-xl shadow-xl p-4 border border-blue-700">
+                            <p onClick={() => setVerification(false)} className="flex justify-end hover:cursor-pointer text-blue-900">❌</p>
+                            <p className="flex justify-center font-semibold mb-2 text-xl text-blue-900">Payment Verification</p>
+                            <p className="text-lg text-blue-900">Product Name: {productName}</p>
+                            <p className="text-lg text-blue-900">Customer Name: {customerName}</p>
+                            <div className="flex flex-row gap-x-2">
+                                <div className="flex justify-center "><button onClick={() => {setVerification(false);handlePaymentVerification(true)}} className="bg-green-600 text-white rounded-xl mt-2 p-2 hover:bg-green-700 hover:scale-105 hover:cursor-pointer transition duration-300 ease-in-out">Payment Received</button></div>
+                                <div className="flex justify-center "><button onClick={() => {setVerification(false);handlePaymentVerification(false)}} className="bg-red-500 text-white rounded-xl mt-2 p-2 hover:bg-red-600 hover:scale-105 hover:cursor-pointer transition duration-300 ease-in-out">Payment not Received</button></div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                
+                {
                     profileClick && 
                     <div className="fixed inset-0 z-50 flex flex-col justify-center backdrop-blur-sm items-center">
-                        <div className="select-none font-sans bg-gradient-to-br from-blue-100 via-purple-200 to-purple-100 rounded-xl shadow-xl p-5 border border-blue-700">
+                        <div className="select-none font-sans bg-gradient-to-br from-blue-100 via-purple-200 to-purple-100 rounded-xl shadow-xl p-4 border border-blue-700">
                             <p onClick={() => setProfileClick(false)} className="flex justify-end hover:cursor-pointer text-blue-900">❌</p>
                             <p className="text-lg text-blue-900">Welcome, {username}</p>
                             <p className="text-lg text-blue-900">{email}</p>
