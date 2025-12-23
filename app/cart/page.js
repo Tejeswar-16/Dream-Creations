@@ -5,17 +5,20 @@ import Footer from "../Footer";
 import NavBar from "../NavBar";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "../_util/config";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDocs, query, where } from "firebase/firestore";
 import Image from "next/image";
+import { MdDelete } from "react-icons/md";
+import { useRouter } from "next/navigation";
 
 export default function Cart(){
 
     const [cartProd,setCartProd] = useState([]);
     const [userName,setUserName] = useState("");
     const [email,setEmail] = useState("");
-    const [loading,setLoading] = useState(true);
+    const [loading,setLoading] = useState(true);    
 
     const footRef = useRef(null);
+    const router = useRouter();
 
     useEffect(() => {
         onAuthStateChanged(auth,(user) => {
@@ -24,7 +27,7 @@ export default function Cart(){
                 setEmail(user.email);
             }
         });
-    });
+    },[]);
 
     useEffect(() => {
         async function fetchCart(){
@@ -32,10 +35,12 @@ export default function Cart(){
             const q = query(
                 collection(db,"cart"),
                 where("email","==",email),
-                where("userName","==",userName)
             );
             const querySnapshot = await getDocs(q);
-            const data = querySnapshot.docs.map((doc) => doc.data());
+            const data = querySnapshot.docs.map((doc) => ({
+                cartDocId: doc.id,
+                ...doc.data()
+            }));
 
             const q1 = query(
                 collection(db,"products")
@@ -48,7 +53,10 @@ export default function Cart(){
             for (const product of data){
                 for (const prod of data1){
                     if (product.id === prod.id){
+                        prod.quantity = product.quantity;
+                        prod.cartDocId = product.cartDocId;
                         data2.push(prod);
+                        break;
                     }
                 }
             }
@@ -58,6 +66,16 @@ export default function Cart(){
         }
         fetchCart();
     },[userName,email]);
+
+    async function handleDelete(id){
+        try{
+            await deleteDoc(doc(db,"cart",id));
+            window.location.reload();
+        }
+        catch(error){
+            alert(error)
+        }
+    }
 
     return (
         <>
@@ -81,17 +99,19 @@ export default function Cart(){
                                             <th className="font-sans p-2 font-semibold border border-gray-400">Product Description</th>
                                             <th className="font-sans p-2 font-semibold border border-gray-400">Price</th>
                                             <th className="font-sans p-2 font-semibold border border-gray-400">Action</th>
+                                            <th className="font-sans p-2 font-semibold border border-gray-400">Remove</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {
                                             cartProd.map((product,index) => (
                                                 <tr key={index} className="hover:bg-purple-100 transition duration-300 ease-in-out">
-                                                    <td className="font-sans md:text-lg p-2 border border-black"><Image src={product.images[0]} width={200} height={100} alt="cart-img"/></td>
+                                                    <td className="font-sans md:text-lg p-2 border border-black hover:cursor-pointer"><Image onClick={() => router.push("/products/"+product.id)} src={product.images[0]} width={200} height={100} alt="cart-img"/></td>
                                                     <td className="font-sans md:text-lg p-2 border border-black">{product.productName}</td>
                                                     <td className="font-sans md:text-lg p-2 border border-black">{product.productDescription}</td>
-                                                    <td className="font-sans md:text-lg p-2 border border-black">{product.discountPrice}</td>
-                                                    <td className="font-sans md:text-lg p-2 border border-black"><button className="bg-blue-300 rounded-xl hover:bg-blue-400 hover:cursor-pointer transition duration-300 ease-in-out">Buy Now</button></td>
+                                                    <td className="font-sans md:text-lg p-2 border border-black">{Number(product.discountPrice)*Number(product.quantity)}.00</td>
+                                                    <td className="font-sans md:text-lg p-2 border border-black"><button onClick={() => router.push("/checkout/"+product.id)} className="bg-blue-300 rounded-xl p-1 hover:bg-blue-400 hover:cursor-pointer transition duration-300 ease-in-out">Buy Now</button></td>
+                                                    <td className="font-sans md:text-lg p-2 border border-black"><MdDelete onClick={() => handleDelete(product.cartDocId)} className="mx-auto text-3xl text-red-500 hover:cursor-pointer transition duration-300 ease-in-out"/></td>
                                                 </tr>
                                             ))
                                         }
@@ -100,7 +120,6 @@ export default function Cart(){
                             </div>
                     }
                 </div>
-
                 {
                     loading && 
                         <div className="fixed inset-0 z-100 flex flex-col justify-center backdrop-blur-sm items-center">
@@ -109,7 +128,6 @@ export default function Cart(){
                             </div>
                         </div>
                 }
-                
                 <Footer footRef={footRef}/>
             </div>
         </>

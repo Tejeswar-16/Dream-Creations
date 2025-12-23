@@ -6,7 +6,7 @@ import { BsPersonSquare } from "react-icons/bs";
 import Image from "next/image";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { addDoc, collection, getDocs, serverTimestamp } from "firebase/firestore";
 
 export default function AdminPanel(){
 
@@ -20,6 +20,7 @@ export default function AdminPanel(){
     const [actualPrice,setActualPrice] = useState("");
     const [discPrice,setDiscPrice] = useState("");
     const [images,setImages] = useState([]);
+    const [orders,setOrders] = useState([]);
 
     const router = useRouter();
 
@@ -36,6 +37,26 @@ export default function AdminPanel(){
             }
         });
     });
+
+    useEffect(() => {
+        async function fetchOrders(){
+            try{
+                setLoading(true);
+                const q = collection(
+                    db,"orders"
+                );
+                const querySnapshot = await getDocs(q);
+                const data = querySnapshot.docs.map((doc) => doc.data());
+                console.log(data);
+                setOrders(data);
+                setLoading(false);
+            }
+            catch(error){
+                alert(error);
+            }
+        }
+        fetchOrders();
+    },[]);
 
     function handleImageChange(e){
         setImages([...e.target.files]);
@@ -128,10 +149,58 @@ export default function AdminPanel(){
                     </div>
                 </div>
 
+                <div className="mx-auto mb-10 w-75 md:w-190 lg:w-250 xl:w-350 rounded-xl p-2 border-t-4 border-r-2 border-l-2 border-b-1 border-blue-700 bg-gradient-to-br from-blue-200 via-blue-100 to-pink-100">
+                    <h1 className="select-none font-sans flex justify-center font-bold text-lg md:text-3xl text-blue-900 mb-4">Order Details</h1>
+                    
+                    {
+                        orders.length == 0 
+                        ?
+                            <h1 className="select-none flex justify-center font-sans text-lg text-blue-900">No orders yet😔</h1>
+                        :
+                            <div className="overflow-hidden border border-gray-300 mx-auto overflow-x-auto border border-black md:w-185 lg:w-240 xl:w-340">
+                                <table className="mx-auto text-center">
+                                    <thead className="bg-blue-950 text-white">
+                                        <tr>
+                                            <th className="font-sans p-2 font-semibold border border-gray-400">Order ID</th>
+                                            <th className="font-sans p-2 font-semibold border border-gray-400">Product Name</th>
+                                            <th className="font-sans p-2 font-semibold border border-gray-400">Qunatity</th>
+                                            <th className="font-sans p-2 font-semibold border border-gray-400">Cust. Name</th>
+                                            <th className="font-sans p-2 font-semibold border border-gray-400">Cust. Mobile</th>
+                                            <th className="font-sans p-2 font-semibold border border-gray-400">Cust. Email</th>
+                                            <th className="font-sans p-2 font-semibold border border-gray-400">Address</th>
+                                            <th className="font-sans p-2 font-semibold border border-gray-400">City</th>
+                                            <th className="font-sans p-2 font-semibold border border-gray-400">State</th>
+                                            <th className="font-sans p-2 font-semibold border border-gray-400">Pincode</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {
+                                            orders.map((order,index) => (
+                                                <tr key={index} className="hover:bg-purple-100 transition duration-300 ease-in-out">
+                                                    <td className="font-sans text-sm md:text-lg p-2 border border-black">{order.orderId}</td>
+                                                    <td className="font-sans md:text-lg p-2 border border-black">{order.productName}</td>
+                                                    <td className="font-sans md:text-lg p-2 border border-black">{order.quantity}</td>
+                                                    <td className="font-sans md:text-lg p-2 border border-black">{order.customerName}</td>
+                                                    <td className="font-sans md:text-lg p-2 border border-black">{order.customerMobile}</td>
+                                                    <td className="font-sans md:text-lg p-2 border border-black">{order.customerEmail}</td>
+                                                    <td className="font-sans md:text-lg p-2 border border-black">{order.deliveryAddress}</td>
+                                                    <td className="font-sans md:text-lg p-2 border border-black">{order.deliveryCity}</td>
+                                                    <td className="font-sans md:text-lg p-2 border border-black">{order.deliveryState}</td>
+                                                    <td className="font-sans md:text-lg p-2 border border-black">{order.pincode}</td>
+                                                </tr>
+                                            ))
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                    }
+                </div>
+
                 {
                     profileClick && 
                     <div className="fixed inset-0 z-50 flex flex-col justify-center backdrop-blur-sm items-center">
                         <div className="select-none font-sans bg-gradient-to-br from-blue-100 via-purple-200 to-purple-100 rounded-xl shadow-xl p-5 border border-blue-700">
+                            <p onClick={() => setProfileClick(false)} className="flex justify-end hover:cursor-pointer text-blue-900">❌</p>
                             <p className="text-lg text-blue-900">Welcome, {username}</p>
                             <p className="text-lg text-blue-900">{email}</p>
                             <div className="flex justify-center "><button onClick={() => {setProfileClick(false);handleLogout()}} className="bg-red-500 text-white rounded-xl mt-2 p-2 hover:bg-red-600 hover:scale-105 hover:cursor-pointer transition duration-300 ease-in-out">Logout</button></div>

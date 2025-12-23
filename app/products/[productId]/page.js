@@ -1,11 +1,11 @@
 "use client"
 
-import { useParams } from "next/navigation"
+import { useParams, useRouter } from "next/navigation"
 import NavBar from '../../NavBar'
 import Footer from '../../Footer'
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { addDoc, collection, getDocs, query, serverTimestamp, Timestamp, where } from "firebase/firestore";
+import { addDoc, collection, doc, getDocs, query, serverTimestamp, Timestamp, updateDoc, where } from "firebase/firestore";
 import { auth, db } from "../../_util/config";
 import { onAuthStateChanged } from "firebase/auth";
 
@@ -26,6 +26,7 @@ export default function Products(){
     const [added,setAdded] = useState(false);
 
     const params = useParams();
+    const router = useRouter();
     const footRef = useRef(null);
 
     useEffect(() => {
@@ -96,12 +97,32 @@ export default function Products(){
         try{
             if (isLoggedIn){
                 setLoading(true);
-                await addDoc(collection(db,"cart"),{
-                id: id,
-                userName: userName,
-                email: email,
-                });
-                setAdded(true);
+                const q = query(
+                    collection(db,"cart"),
+                    where("id","==",id),
+                    where("email","==",email)
+                );
+                const querySnapshot = await getDocs(q);
+                if (querySnapshot.empty){
+                    await addDoc(collection(db,"cart"),{
+                        id: id,
+                        userName: userName,
+                        email: email,
+                        quantity: quantity
+                    });
+                    setAdded(true);
+                }
+                else{
+                    querySnapshot.forEach(async (document) => {
+                        const docRef = doc(db,"cart",document.id);
+                        const currentData = document.data();
+
+                        await updateDoc(docRef,{
+                            quantity: currentData.quantity + quantity
+                        })
+                    })
+                    setAdded(true);
+                }
             }
             else{
                 setNotLoggedIn(true);
@@ -113,6 +134,13 @@ export default function Products(){
         finally{
             setLoading(false);
         }
+    }
+
+    function handleBuyNow(id){
+        if (isLoggedIn)
+            router.push("/checkout/"+id);
+        else
+            setNotLoggedIn(true);
     }
 
     if (!product){
@@ -151,23 +179,15 @@ export default function Products(){
                     <div className="select-none bg-gradient-to-br border-t-4 border-r-2 border-l-2 border-b-1 border-blue-700 from-pink-200 via-blue-100 to-blue-200 shadow-xl shadow-pink-300 rounded-xl p-4 w-75 md:w-200">
                         <h1 className="flex justify-center font-sans font-bold text-3xl text-blue-900">{product.productName}</h1>
                         <h1 className="flex justify-center font-sans font-bold text-xl text-blue-900">{product.productDescription}</h1>
-                        <div className="mt-4 flex justify-center items-center gap-4">
-                            <span className="font-sans font-semibold text-blue-900">Quantity</span>
-                            <div className="select-none font-sans flex border border-blue-700 rounded-lg text-blue-900">
-                                <button onClick={() => setQuantity(quantity<=1 ? 1 : quantity-1)} className="px-3 hover:cursor-pointer">−</button>
-                                <span className="px-4">{quantity}</span>
-                                <button onClick={() => setQuantity(quantity+1)} className="px-3 hover:cursor-pointer">+</button>
-                            </div>
-                        </div>
                         <div className="p-[2px] rounded-xl mt-4 bg-gradient-to-br from-pink-500 to-blue-500">
                             <div className="flex justify-center rounded-xl bg-gradient-to-br from-pink-200 via-blue-100 to-blue-200 pb-5 pt-2 font-sans flex flex-row items-end gap-x-2">
                                 <p className="text-3xl font-semibold mt-4 text-blue-900">₹{product.discountPrice*quantity+".00"}</p>
-                                <p className="bg-red-500 text-sm text-sm rounded-sm text-white p-1">- {Math.round(product.discountPrice*100/product.actualPrice)}%</p>
+                                <p className="bg-red-500 text-sm text-sm rounded-sm text-white p-1">- {Math.round((product.actualPrice - product.discountPrice)*100/product.actualPrice)}%</p>
                             </div>
                         </div>
                         <div className="mt-6 flex gap-4">
                             <button onClick={() => handleAddToCart(product.id)} className="flex-1 border border-blue-700 text-blue-700 py-3 rounded-xl hover:border-0 hover:bg-blue-700 hover:text-white hover:cursor-pointer transition duration-300 ease-in-out">Add to Cart</button>
-                            <button className="flex-1 bg-blue-700 text-white py-3 rounded-xl hover:bg-blue-800 hover:cursor-pointer transition duration-300 ease-in-out">Buy Now</button>
+                            <button onClick={() => handleBuyNow(product.id)} className="flex-1 bg-blue-700 text-white py-3 rounded-xl hover:bg-blue-800 hover:cursor-pointer transition duration-300 ease-in-out">Buy Now</button>
                         </div>
                         <div className="font-sans text-blue-900 mt-6 bg-gradient-to-tl from-pink-200 via-blue-100 to-blue-200 p-4 rounded-xl">
                             <h1 className="font-sans flex justify-center text-blue-900 text-2xl font-semibold">Product Review</h1>

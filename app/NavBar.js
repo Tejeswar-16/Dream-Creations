@@ -9,7 +9,7 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { auth } from ".//_util/config.js"
 import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut, updateProfile } from "firebase/auth";
 
-export default function NavBar({footRef}){
+export default function NavBar({footRef,shopping}){
     const [home,setHome] = useState(true);
     const [about,setAbout] = useState(false);
     const [shop,setShop] = useState(false);
@@ -123,21 +123,13 @@ export default function NavBar({footRef}){
 
     return (
         <>
-            <div className="z-25 sticky top-0 mx-auto my-4 p-1 md:p-4 rounded-xl border-blue-700 border-t-4 border-r-3 border-l-3 border-b-2 bg-gradient-to-b from-blue-200 via-purple-100 to-purple-100 w-77 md:w-190 lg:w-250 xl:w-350">
+            <div className="z-25 sticky top-0 mx-auto my-4 p-1 md:p-4 rounded-xl shadow-lg shadow-blue-900 border-blue-700 border-t-4 border-r-3 border-l-3 border-b-2 bg-gradient-to-b from-blue-200 via-purple-100 to-purple-100 w-77 md:w-190 lg:w-250 xl:w-350">
                 <div className="flex flex-row justify-between items-center">
                     <div onClick={() => router.push("/")} className="hover:cursor-pointer"><Image className="w-14" src={"/logo.png"} width={70} height={20} alt="logo"></Image></div>
                     
-                    <div className="font-sans font-bold text-sm lg:text-2xl xl:text-3xl flex md:flex-row flex-col md:gap-x-4 lg:gap-x-8">
+                    <div className="font-sans font-bold text-sm md:text-2xl lg:text-3xl flex md:flex-row flex-col md:gap-x-4 lg:gap-x-8">
                         <h1 className="select-none text-pink-500">K A N A V U</h1>
                         <h1 className="select-none text-blue-800">C R E A T I O N S</h1>
-                    </div>
-
-                    {/*Desktop*/}
-                    <div className="hidden font-sans select-none md:flex md:flex-row md:justify-between md:gap-x-2 lg:gap-x-4 xl:gap-x-8">
-                        <div onClick={() => {router.push("/");handleNav("home")}} className={home ? "bg-gradient-to-b from-blue-200 to-purple-100 rounded-xl p-2 font-semibold text-blue-900 hover:cursor-pointer hover:scale-105 transition duration-300 ease-in-out md:text-sm lg:text-lg" : "md:text-sm lg:text-lg p-2 text-blue-900 font-semibold hover:cursor-pointer hover:scale-105 transition duration-300 ease-in-out"}>Home</div>
-                        <div onClick={() => {router.push("/");handleNav("about")}} className={about ? "bg-gradient-to-b from-blue-200 to-purple-100 rounded-xl p-2 font-semibold text-blue-900 hover:cursor-pointer hover:scale-105 transition duration-300 ease-in-out md:text-sm lg:text-lg" : "md:text-sm lg:text-lg p-2 text-blue-900 font-semibold hover:cursor-pointer hover:scale-105 transition duration-300 ease-in-out"}>About</div>
-                        <div onClick={() => {router.push("/");handleNav("shop")}} className={shop ? "bg-gradient-to-b from-blue-200 to-purple-100 rounded-xl p-2 font-semibold text-blue-900 hover:cursor-pointer hover:scale-105 transition duration-300 ease-in-out md:text-sm lg:text-lg" : "md:text-sm lg:text-lg p-2 text-blue-900 font-semibold hover:cursor-pointer hover:scale-105 transition duration-300 ease-in-out"}>Shop</div>
-                        <div onClick={() => {scrollToFooter();handleNav("contact")}} className={contact ? "bg-gradient-to-b from-blue-200 to-purple-100 rounded-xl p-2 font-semibold text-blue-900 hover:cursor-pointer hover:scale-105 transition duration-300 ease-in-out md:text-sm lg:text-lg" : "md:text-sm lg:text-lg p-2 text-blue-900 font-semibold hover:cursor-pointer hover:scale-105 transition duration-300 ease-in-out"}>Contact</div>
                     </div>
 
                     <div className="flex flex-col md:flex-row gap-x-8 items-center">
@@ -152,14 +144,9 @@ export default function NavBar({footRef}){
                                             <BsPersonSquare className="text-blue-900 text-sm lg:text-lg"/>
                                             <div className="flex flex-col gap-y-0">
                                                 <h1 className="select-none font-sans text-blue-900 text-sm lg:text-lg">{username}</h1>
-                                                
                                             </div>
                                         </div>
                                 }
-                            </div>
-                            {/*Mobile*/}
-                            <div className="md:hidden">
-                                <GiHamburgerMenu onClick={() => setMenuOpen(!menuOpen)} className="text-blue-900" size={25}/>
                             </div>
                         </div>
                         <div onClick={() => router.push("/cart")} className="flex flex-row hover:cursor-pointer hover:scale-105 transition duration-300 ease-in-out">
@@ -187,8 +174,6 @@ export default function NavBar({footRef}){
                 {/* Menu items */}
                 <div className="flex flex-col gap-4 px-6">
                     <div onClick={() => { router.push("/");handleNav("home"); setMenuOpen(false); }} className={home ? "bg-gradient-to-b from-blue-200 to-purple-100 rounded-xl p-2 font-semibold text-blue-900 hover:cursor-pointer hover:scale-105 transition duration-300 ease-in-out md:text-sm lg:text-lg" : "md:text-sm lg:text-lg p-2 text-blue-900 font-semibold hover:cursor-pointer hover:scale-105 transition duration-300 ease-in-out"}>Home</div>
-                    <div onClick={() => { handleNav("about"); setMenuOpen(false); }} className={about ? "bg-gradient-to-b from-blue-200 to-purple-100 rounded-xl p-2 font-semibold text-blue-900 hover:cursor-pointer hover:scale-105 transition duration-300 ease-in-out md:text-sm lg:text-lg" : "md:text-sm lg:text-lg p-2 text-blue-900 font-semibold hover:cursor-pointer hover:scale-105 transition duration-300 ease-in-out"}>About</div>
-                    <div onClick={() => { handleNav("shop"); setMenuOpen(false); }} className={shop ? "bg-gradient-to-b from-blue-200 to-purple-100 rounded-xl p-2 font-semibold text-blue-900 hover:cursor-pointer hover:scale-105 transition duration-300 ease-in-out md:text-sm lg:text-lg" : "md:text-sm lg:text-lg p-2 text-blue-900 font-semibold hover:cursor-pointer hover:scale-105 transition duration-300 ease-in-out"}>Shop</div>
                     <div onClick={() => { scrollToFooter();handleNav("contact"); setMenuOpen(false); }} className={contact ? "bg-gradient-to-b from-blue-200 to-purple-100 rounded-xl p-2 font-semibold text-blue-900 hover:cursor-pointer hover:scale-105 transition duration-300 ease-in-out md:text-sm lg:text-lg" : "md:text-sm lg:text-lg p-2 text-blue-900 font-semibold hover:cursor-pointer hover:scale-105 transition duration-300 ease-in-out"}>Contact</div>
                 </div>
             </div>
