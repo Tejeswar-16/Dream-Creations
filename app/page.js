@@ -23,10 +23,8 @@ export default function Home(){
   const [priceClick,setPriceClick] = useState(Array(6).fill(false));
   const [sortProduct,setSortProduct] = useState(Array(6).fill(false));
   const [searchProduct,setSearchProduct] = useState("");
-  const [shopping,setShopping] = useState(false);
 
   const router = useRouter();
-  const footRef = useRef(null);
 
   useEffect(() => {
       onAuthStateChanged(auth,(user) => {
@@ -144,7 +142,7 @@ export default function Home(){
   return(
     <>
       <div className="relative bg-gradient-to-b from-purple-100 via-purple-100 to-blue-100 py-1 min-h-screen">
-        <NavBar footRef={footRef} shopping={setShopping}/>
+        <NavBar/>
 
         <div className="mx-auto mb-10 p-4 border-2 border-blue-700 overflow-hidden bg-gradient-to-br from-blue-100 via-fuchsia-100 to-fuchsia-200 w-75 md:w-180 lg:w-250 xl:w-350 rounded-lg shadow-xl shadow-fuchsia-900 mb-5 transition duration-300 ease-in-out">
           <h1 className='font-sans flex justify-center mb-4 font-bold text-blue-900 text-xl md:text-3xl'>Featured Products</h1>
@@ -253,7 +251,7 @@ export default function Home(){
             </div>
         }
 
-        <Footer footRef={footRef}/>
+        <Footer/>
       </div>
     </>
   )

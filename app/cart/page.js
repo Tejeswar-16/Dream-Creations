@@ -17,7 +17,6 @@ export default function Cart(){
     const [email,setEmail] = useState("");
     const [loading,setLoading] = useState(true);    
 
-    const footRef = useRef(null);
     const router = useRouter();
 
     useEffect(() => {
@@ -80,7 +79,7 @@ export default function Cart(){
     return (
         <>
             <div className="relative bg-gradient-to-b from-purple-100 via-purple-100 to-blue-100 py-1 min-h-screen">
-                <NavBar footRef={footRef}/>
+                <NavBar/>
                 
                 <div className="mx-auto mb-10 w-75 md:w-150 rounded-xl p-2 border-t-4 border-r-2 border-l-2 border-b-1 border-blue-700 bg-gradient-to-br from-blue-200 via-blue-100 to-pink-100 w-75 md:w-190 lg:w-250 xl:w-350">
                     <h1 className="select-none font-sans flex justify-center font-bold text-lg md:text-3xl text-blue-900 mb-4">Shopping Cart</h1>
@@ -128,7 +127,7 @@ export default function Cart(){
                             </div>
                         </div>
                 }
-                <Footer footRef={footRef}/>
+                <Footer/>
             </div>
         </>
     )

@@ -8,12 +8,7 @@ import { BsPersonSquare } from "react-icons/bs";
 import { auth } from ".//_util/config.js"
 import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut, updateProfile } from "firebase/auth";
 
-export default function NavBar({footRef}){
-    const [home,setHome] = useState(true);
-    const [about,setAbout] = useState(false);
-    const [shop,setShop] = useState(false);
-    const [contact,setContact] = useState(false);
-    const [menuOpen, setMenuOpen] = useState(false);
+export default function NavBar(){
     const [signIn,setSignIn] = useState(false);
     const [signInEmail,setSignInEmail] = useState("");
     const [signInPassword,setSignInPassword] = useState("");
@@ -28,19 +23,9 @@ export default function NavBar({footRef}){
     const [username,setUserName] = useState("");
     const [email,setEmail] = useState("");
     const [profileClick,setProfileClick] = useState(false);
+    const [notLoggedIn,setNotLoggedIn] = useState(false);
 
     const router = useRouter();
-
-    const scrollToFooter = () => {
-        footRef.current?.scrollIntoView({ behavior: "smooth" });
-    };
-
-    const handleNav = (item) => {
-        setHome(item === "home");
-        setAbout(item === "about");
-        setShop(item === "shop");
-        setContact(item === "contact");
-    }
 
     useEffect(() => {
         onAuthStateChanged(auth,(user) => {
@@ -148,7 +133,7 @@ export default function NavBar({footRef}){
                                 }
                             </div>
                         </div>
-                        <div onClick={() => router.push("/cart")} className="flex flex-row hover:cursor-pointer hover:scale-105 transition duration-300 ease-in-out">
+                        <div onClick={() => {email !== "" ? router.push("/cart") : setNotLoggedIn(true)}} className="flex flex-row hover:cursor-pointer hover:scale-105 transition duration-300 ease-in-out">
                             <MdOutlineShoppingCart className="text-blue-900" size={35}/>
                             <h1 className="select-none font-sans text-sm md:text-lg text-blue-900 font-bold mt-3">Cart</h1>
                         </div>
@@ -223,6 +208,16 @@ export default function NavBar({footRef}){
                         <button onClick={() => {setProfileClick(false);router.push("/myorders")}} className="bg-green-500 text-white rounded-xl mt-2 p-2 hover:bg-green-700 hover:scale-105 hover:cursor-pointer transition duration-300 ease-in-out">My Orders</button>
                         <button onClick={() => {setProfileClick(false);handleLogout()}} className="bg-red-500 text-white rounded-xl mt-2 p-2 hover:bg-red-600 hover:scale-105 hover:cursor-pointer transition duration-300 ease-in-out">Logout</button>
                     </div>
+                    </div>
+                </div>
+            }
+
+            {
+                notLoggedIn && 
+                <div className="fixed inset-0 z-50 flex flex-col justify-center backdrop-blur-sm items-center">
+                    <div className="select-none font-sans bg-gradient-to-br from-blue-100 via-purple-200 to-purple-100 rounded-xl shadow-xl p-5 border border-blue-700">
+                    <p className="text-lg text-blue-900">Kindly sign in to proceed furthur</p>
+                    <div className="flex justify-center "><button onClick={() => {setNotLoggedIn(false)}} className="bg-blue-900 text-purple-100 w-10 rounded-xl mt-2 p-2 hover:cursor-pointer">OK</button></div>
                     </div>
                 </div>
             }

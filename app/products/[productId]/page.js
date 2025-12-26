@@ -27,7 +27,6 @@ export default function Products(){
 
     const params = useParams();
     const router = useRouter();
-    const footRef = useRef(null);
 
     useEffect(() => {
         onAuthStateChanged(auth,(user) => {
@@ -156,7 +155,7 @@ export default function Products(){
     return (
         <>
             <div className="relative bg-gradient-to-b from-purple-100 via-purple-100 to-blue-100 py-1 min-h-screen">
-                <NavBar footRef={footRef}/>
+                <NavBar/>
                 <div className="flex flex-col md:flex-row justify-center items-center md:items-stretch mx-0 md:mx-2 lg:mx-17 mb-10 gap-x-8 gap-y-8">
                     <div className="bg-gradient-to-br border-t-4 border-r-2 border-l-2 border-b-1 border-blue-700 from-pink-200 via-blue-100 to-blue-200 rounded-xl shadow-xl shadow-pink-300 p-4 w-75 md:w-190 lg:w-143">
                         <div className="flex flex-row gap-x-8">
@@ -191,7 +190,7 @@ export default function Products(){
                         </div>
                         <div className="font-sans text-blue-900 mt-6 bg-gradient-to-tl from-pink-200 via-blue-100 to-blue-200 p-4 rounded-xl">
                             <h1 className="font-sans flex justify-center text-blue-900 text-2xl font-semibold">Product Review</h1>
-                            <div className="flex justify-center"><button onClick={() => setReview(true)} className="font-sans text-blue-900 rounded-lg p-1 border border-blue-700 hover:bg-blue-700 hover:text-white hover:cursor-pointer transition duration-300 ease-in-out">Review this product</button></div>
+                            <div className="flex justify-center"><button onClick={() => {isLoggedIn ? setReview(true) : setNotLoggedIn(true)}} className="font-sans text-blue-900 rounded-lg p-1 border border-blue-700 hover:bg-blue-700 hover:text-white hover:cursor-pointer transition duration-300 ease-in-out">Review this product</button></div>
                             <div className="h-42 overflow-y-auto">
                                 {
                                     (reviewData.length == 0) ?
@@ -220,7 +219,7 @@ export default function Products(){
 
                 {
                     review && 
-                        <div className="fixed inset-0 flex flex-col justify-center backdrop-blur-sm items-center">
+                        <div className="fixed inset-0 z-50 flex flex-col justify-center backdrop-blur-sm items-center">
                             <div className="font-sans bg-gradient-to-br from-blue-200 via-purple-200 to-purple-100 border-3 border-blue-700 rounded-3xl shadow-2xl shadow-gray-400 m-auto w-70 md:m-auto md:w-120">
                                 <h1 onClick={() => setReview(false)} className="flex justify-end mr-2 mt-2 hover:cursor-pointer">❌</h1>
                                 <h1 className="select-none flex justify-center text-blue-900 font-sans font-semibold md:text-2xl pt-2">Anonymous Review - {product.productName}</h1>                                            
@@ -277,7 +276,7 @@ export default function Products(){
                     </div>
                 }
 
-                <Footer footRef={footRef}/>
+                <Footer/>
             </div>
         </>
     )
