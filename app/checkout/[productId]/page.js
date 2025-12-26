@@ -99,16 +99,21 @@ export default function Checkout(){
             <div className="relative bg-gradient-to-b from-purple-100 via-purple-100 to-blue-100 py-1 min-h-screen">
                 <NavBar/>
                 <div className="flex flex-col gap-y-4 md:flex-row mx-auto border-3 border-blue-700 rounded-xl shadow-lg shadow-blue-900 p-4 mb-10 bg-gradient-to-br from-blue-100 via-purple-200 to-purple-100 w-75 md:w-190 lg:w-250 xl:w-350">
-                    <div className="flex-1 lg:p-2">
+                    <div className="flex-1 lg:p-2 mr-4">
                         <div className="flex flex-col md:flex-row md:justify-between md:items-center">
-                            <div className="flex justify-start gap-x-4 items-center">                                
-                                {
-                                    product?.images?.length > 0 && 
-                                        <Image onClick={() => router.push("/products/"+product.id)} className="rounded-xl hover:cursor-pointer" src={product?.images[0]} width={70} height={50} alt="prod-image"></Image>
-                                } 
+                            <div className="flex justify-start items-center gap-x-7">                                
+                                <div className="flex flex-col gap-y-2">
+                                    {
+                                        product?.images?.length > 0 && 
+                                            <Image onClick={() => router.push("/products/"+product.id)} className="rounded-xl hover:cursor-pointer" src={product?.images[0]} width={70} height={50} alt="prod-image"></Image>
+                                    }
+                                    <div className="flex justify-end">
+                                        <h1 className="font-sans text-blue-900 font-semibold lg:text-lg">₹{(Number(product.discountPrice)*quantity).toFixed(2)}</h1>
+                                    </div>
+                                </div>
                                 <div className="flex flex-col gap-y-1">
-                                    <h1 className="font-sans text-blue-900 font-bold lg:text-xl">{product.productName}</h1>
-                                    <h1 className="font-sans text-blue-900 font-semibold text-sm lg:text-lg">{product.productDescription}</h1>
+                                    <h1 className="font-sans text-blue-900 font-bold text-lg lg:text-xl">{product.productName}</h1>
+                                    <h1 className="font-sans text-blue-900 text-justify">{product.productDescription}</h1>
                                     <div className="flex items-center gap-4">
                                         <span className="font-sans font-semibold text-blue-900">Quantity</span>
                                         <div className="select-none font-sans flex border border-blue-700 rounded-lg text-blue-900">
@@ -118,9 +123,6 @@ export default function Checkout(){
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div className="flex justify-end mr-30 mt-1 md:mr-20">
-                                <h1 className="font-sans text-blue-900 font-semibold lg:text-lg">₹{(Number(product.discountPrice)*quantity).toFixed(2)}</h1>
                             </div>
                         </div>
                         <div className="flex flex-row justify-between mt-4 items-center">
