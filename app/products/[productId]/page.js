@@ -176,8 +176,8 @@ export default function Products(){
                         </div>
                     </div>
                     <div className="select-none bg-gradient-to-br border-t-4 border-r-2 border-l-2 border-b-1 border-blue-700 from-pink-200 via-blue-100 to-blue-200 shadow-xl shadow-pink-300 rounded-xl p-4 w-75 md:w-200">
-                        <h1 className="flex justify-center font-sans font-bold text-3xl text-blue-900">{product.productName}</h1>
-                        <h1 className="flex justify-center font-sans font-bold text-xl text-blue-900">{product.productDescription}</h1>
+                        <h1 className="flex justify-center font-sans font-bold text-2xl lg:text-3xl text-blue-900">{product.productName}</h1>
+                        <h1 className="flex justify-center font-sans font-bold lg:text-lg text-center text-blue-900">{product.productDescription}</h1>
                         <div className="p-[2px] rounded-xl mt-4 bg-gradient-to-br from-pink-500 to-blue-500">
                             <div className="flex justify-center rounded-xl bg-gradient-to-br from-pink-200 via-blue-100 to-blue-200 pb-5 pt-2 font-sans flex flex-row items-end gap-x-2">
                                 <p className="text-3xl font-semibold mt-4 text-blue-900">₹{product.discountPrice*quantity+".00"}</p>
@@ -189,8 +189,8 @@ export default function Products(){
                             <button onClick={() => handleBuyNow(product.id)} className="flex-1 bg-blue-700 text-white py-3 rounded-xl hover:bg-blue-800 hover:cursor-pointer transition duration-300 ease-in-out">Buy Now</button>
                         </div>
                         <div className="font-sans text-blue-900 mt-6 bg-gradient-to-tl from-pink-200 via-blue-100 to-blue-200 p-4 rounded-xl">
-                            <h1 className="font-sans flex justify-center text-blue-900 text-2xl font-semibold">Product Review</h1>
-                            <div className="flex justify-center"><button onClick={() => {isLoggedIn ? setReview(true) : setNotLoggedIn(true)}} className="font-sans text-blue-900 rounded-lg p-1 border border-blue-700 hover:bg-blue-700 hover:text-white hover:cursor-pointer transition duration-300 ease-in-out">Review this product</button></div>
+                            <h1 className="font-sans flex justify-center text-blue-900 text-lg lg:text-2xl font-semibold">Product Review</h1>
+                            <div className="flex justify-center"><button onClick={() => {isLoggedIn ? setReview(true) : setNotLoggedIn(true)}} className="font-sans text-sm lg:text-lg text-blue-900 rounded-lg p-1 border border-blue-700 hover:bg-blue-700 hover:text-white hover:cursor-pointer transition duration-300 ease-in-out">Review this product</button></div>
                             <div className="h-42 overflow-y-auto">
                                 {
                                     (reviewData.length == 0) ?
