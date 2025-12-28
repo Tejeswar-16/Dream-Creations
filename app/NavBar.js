@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { MdOutlineShoppingCart  } from "react-icons/md";
 import { BsPersonSquare } from "react-icons/bs";
 import { auth } from ".//_util/config.js"
-import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut, updateProfile } from "firebase/auth";
+import { createUserWithEmailAndPassword, onAuthStateChanged, sendPasswordResetEmail, signInWithEmailAndPassword, signOut, updateProfile } from "firebase/auth";
 
 export default function NavBar(){
     const [signIn,setSignIn] = useState(false);
@@ -24,6 +24,8 @@ export default function NavBar(){
     const [email,setEmail] = useState("");
     const [profileClick,setProfileClick] = useState(false);
     const [notLoggedIn,setNotLoggedIn] = useState(false);
+    const [forgotPassword,setForgotPassword] = useState(false);
+    const [forgotEmail,setForgotEmail] = useState("");
 
     const router = useRouter();
 
@@ -105,6 +107,18 @@ export default function NavBar(){
         }
     }
 
+    async function handleForgotPassword(){
+        try{
+            setForgotPassword(false);
+            setForgotEmail("");
+            await sendPasswordResetEmail(auth,forgotEmail);
+            alert("Password reset link sent to your registered email");
+        }
+        catch(error){
+            alert(error.message);
+        }
+    }
+
     return (
         <>
             <div className="z-25 sticky top-0 mx-auto my-4 p-1 md:p-4 rounded-xl shadow-lg shadow-blue-900 border-blue-700 border-t-4 border-r-3 border-l-3 border-b-2 bg-gradient-to-b from-blue-200 via-purple-100 to-purple-100 w-77 md:w-190 lg:w-250 xl:w-350">
@@ -154,7 +168,7 @@ export default function NavBar(){
                                 <button type="submit" className={(signInEmail === "" || signInPassword === "") ? "font-sans rounded-lg mt-4 mx-4 border-2 border-blue-900 bg-blue-900 text-purple-100 text-xl h-10 hover:cursor-not-allowed" : "font-sans rounded-lg mt-4 mx-4 text-purple-100 text-xl bg-blue-900 h-10 hover:cursor-pointer"}>Sign In</button>
                             </div>
                         </form>
-                        <button className="flex justify-end font-sans my-2 mx-4 text-sm md:text-md text-red-500 font-semibold hover:cursor-pointer">Forgot Password?</button>
+                        <button onClick={() => setForgotPassword(true)} className="flex justify-end font-sans my-2 mx-4 text-sm md:text-md text-red-500 font-semibold hover:cursor-pointer">Forgot Password?</button>
                         <div className="flex flex-row justify-center">
                             <p className="select-none font-sans text-blue-900 md:mx-4 mb-2 p-1">New to Kanavu Creations?</p>
                             <button onClick={() => {setSignIn(false);setSignUpClick(true)}} className="font-sans rounded-lg mb-2 font-semibold p-1 text-blue-900 border-2 border-blue-900 hover:bg-blue-900 hover:text-purple-100 hover:cursor-pointer transition duration-300 ease-in-out">Sign Up</button>
@@ -193,6 +207,20 @@ export default function NavBar(){
                     <div className="select-none font-sans bg-gradient-to-br from-blue-100 via-purple-200 to-purple-100 rounded-xl shadow-xl p-5 border border-blue-700">
                     <p className="text-lg text-blue-900">Invalid Email or Password</p>
                     <div className="flex justify-center "><button onClick={() => {setInvalidEmailPassword(false);setSignIn(true)}} className="bg-blue-900 text-purple-100 w-10 rounded-xl mt-2 p-2 hover:cursor-pointer">OK</button></div>
+                    </div>
+                </div>
+            }
+
+            {
+                forgotPassword && 
+                <div className="fixed inset-0 z-50 flex flex-col justify-center backdrop-blur-sm items-center">
+                    <div className="select-none font-sans w-75 md:w-100 bg-gradient-to-br from-blue-100 via-purple-200 to-purple-100 rounded-xl shadow-xl p-5 border border-blue-700">
+                        <p onClick={() => setForgotPassword(false)} className="flex justify-end hover:cursor-pointer">❌</p>
+                        <p className="flex justify-center font-sans select-none font-bold text-2xl text-blue-900">Forgot Password</p>
+                        <form onSubmit={(e) => {e.preventDefault(e);handleForgotPassword()}}>
+                            <div className="flex justify-center"><input value={forgotEmail} onChange={(e) => setForgotEmail(e.target.value)} required type="text" className="font-sans w-100 border rounded-xl p-2 mt-4 border-blue-900 text-blue-900" placeholder="Registered Email"/></div>
+                            <div className="flex justify-center"><button className="flex justify-center font-sans mt-6 font-bold rounded-xl text-blue-900 shadow-xl p-2 border-2 border-blue-900 hover:bg-blue-900 hover:text-fuchsia-100 hover:scale-110 hover:cursor-pointer transtion duration-300 ease-in-out">Forgot Password</button></div>
+                        </form>
                     </div>
                 </div>
             }
