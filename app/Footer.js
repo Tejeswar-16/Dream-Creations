@@ -37,7 +37,7 @@ export default function Footer({footRef}){
                             <a target="_blank" rel="noopener noreferrer" href={"https://www.instagram.com/kanavu_creations?igsh=cTFzM2tvcnA3a3l6"}><FaInstagram className="my-4 text-blue-900 font-bold text-2xl lg:text-3xl hover:scale-110 hover:cursor-pointer transition duration-300 ease-in-out"/></a>
                             <a target="_blank" rel="noopener noreferrer" href={"https://youtube.com/@kanavucreations?si=M-w4Ppwnn2wFYd8I"}><GrYoutube className="my-4 text-blue-900 font-bold text-2xl lg:text-3xl hover:scale-110 hover:cursor-pointer transition duration-300 ease-in-out"/></a>
                             <a target="_blank" rel="noopener noreferrer" href={"https://wa.me/919092886206"}><FaWhatsapp className="my-4 text-blue-900 font-bold text-2xl lg:text-3xl hover:scale-110 hover:cursor-pointer transition duration-300 ease-in-out"/></a>
-                            <a target="_blank" href={`mailto:Kanavcreations@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`}><IoMdMail className="my-4 text-blue-900 font-bold text-2xl lg:text-3xl hover:scale-110 hover:cursor-pointer transition duration-300 ease-in-out"/></a>
+                            <a target="_blank" href="https://mail.google.com/mail/u/0/#inbox?compose=GTvVlcSHwQXhxBmbrvfXQqxSCTsVMBvcHwFvWSsPNNXSZvjKjczzRttJsvBPzPzSvCRLMgDTtFfTl"><IoMdMail className="my-4 text-blue-900 font-bold text-2xl lg:text-3xl hover:scale-110 hover:cursor-pointer transition duration-300 ease-in-out"/></a>
                         </div>
                     </div>
                     <div className="flex flex-col gap-y-5 md:gap-y-10 justify-center flex-1">
@@ -52,7 +52,7 @@ export default function Footer({footRef}){
                             <h2 className="mx-auto select-none font-bold text-lg text-blue-900">Contact Us</h2>
                             <div className="flex justify-center items-center gap-x-2">
                                 <div><IoMdMail className="mx-auto text-blue-900 font-bold"/></div>
-                                <div><a className="mx-auto text-blue-900 hover:underline" target="_blank" href={`mailto:Kanavcreations@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`}>Kanavcreations@gmail.com</a></div>
+                                <div><a className="mx-auto text-blue-900 hover:underline" target="_blank" href="https://mail.google.com/mail/u/0/#inbox?compose=GTvVlcSHwQXhxBmbrvfXQqxSCTsVMBvcHwFvWSsPNNXSZvjKjczzRttJsvBPzPzSvCRLMgDTtFfTl">Kanavcreations@gmail.com</a></div>
                             </div>
                             <div className="flex justify-center items-center gap-x-2">
                                 <div><FaWhatsapp className="mx-auto text-blue-900 font-bold"/></div>
