@@ -100,7 +100,6 @@ export default function NavBar(){
             await signOut(auth);
             alert("Signed out successfully!");
             router.push("/");
-            window.location.reload();
         }
         catch(error){
             console.log(error.message);

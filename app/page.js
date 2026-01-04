@@ -173,7 +173,7 @@ export default function Home(){
             <div className='flex gap-6 w-max animate-featured-slide'>
               {
                 replica.map((combo,index) => (
-                  <div onClick={() => router.push("/combo-checkout/"+combo.comboId)} key={index} className='hover:cursor-pointer flex gap-2 bg-gradient-to-br border-2 border-blue-700 rounded-lg p-2 from-blue-100 via-fuchsia-100 to-fuchsia-200'>
+                  <div onClick={() => {email !== "" ? router.push("/combo-checkout/"+combo.comboId) : setNotLoggedIn(true)}} key={index} className='hover:cursor-pointer flex gap-2 bg-gradient-to-br border-2 border-blue-700 rounded-lg p-2 from-blue-100 via-fuchsia-100 to-fuchsia-200'>
                     {
                       combo.products.map((product,index) => (
                         <Image key={index} className="rounded-xl z-1" src={product.productImage} width={120} height={120} alt='combo-product'></Image>

@@ -7,7 +7,7 @@ import { auth, db } from "../../_util/config";
 import { BsPersonSquare } from "react-icons/bs";
 import { MdDelete } from "react-icons/md";
 import { useRouter } from "next/navigation";
-import { addDoc, collection, getDocs, query, serverTimestamp } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDocs, query, serverTimestamp } from "firebase/firestore";
 
 export default function AddCombo(){
 
@@ -21,6 +21,9 @@ export default function AddCombo(){
     const [comboPrice,setComboPrice] = useState("");
     const [selectedProducts,setSelectedProducts] = useState([]);
     const [combos,setCombos] = useState([]);
+    const [comboDelete,setComboDelete] = useState(false);
+    const [delComboName,setDelComboName] = useState("");
+    const [delComboId,setDelComboId] = useState("");
 
     const router = useRouter();
 
@@ -143,6 +146,20 @@ export default function AddCombo(){
         }
     }
 
+    async function handleComboDelete(){
+        try{
+            setLoading(true);
+            await deleteDoc(doc(db,"combos",delComboId));
+            alert("Combo deleted successfully!");
+            setLoading(false);
+            setComboDelete(false);
+            window.location.reload();
+        }
+        catch(err){
+            alert(err.message);
+        }
+    }
+
     return (
         <>
             <div className="relative bg-gradient-to-b from-purple-100 via-purple-100 to-blue-100 py-1 min-h-screen">
@@ -202,7 +219,7 @@ export default function AddCombo(){
                                                     <td className="font-sans p-2 border border-black">{combo.actualPrice}</td>
                                                     <td className="font-sans p-2 border border-black">{combo.products.map(p => p.productName).join(", ")}</td>
                                                     <td className="font-sans p-2 border border-black">{combo.createdAt.toDate().toLocaleString()}</td>
-                                                    <td className="font-sans p-2 border border-black"><MdDelete onClick={() => {setProductDelete(true);setDelProdName(product.productName);setDelProdId(product.docId)}} className="mx-auto text-xl text-red-500 hover:cursor-pointer"/></td>
+                                                    <td className="font-sans p-2 border border-black"><MdDelete onClick={() => {setComboDelete(true);setDelComboName(combo.comboName);setDelComboId(combo.docId)}} className="mx-auto text-xl text-red-500 hover:cursor-pointer"/></td>
                                                 </tr>
                                             ))
                                         }
@@ -220,6 +237,21 @@ export default function AddCombo(){
                             <p className="text-lg text-blue-900">Welcome, {username}</p>
                             <p className="text-lg text-blue-900">{email}</p>
                             <div className="flex justify-center "><button onClick={() => {setProfileClick(false);handleLogout()}} className="bg-red-500 text-white rounded-xl mt-2 p-2 hover:bg-red-600 hover:scale-105 hover:cursor-pointer transition duration-300 ease-in-out">Logout</button></div>
+                        </div>
+                    </div>
+                }
+
+                {
+                    comboDelete && 
+                    <div className="fixed inset-0 z-50 flex flex-col justify-center backdrop-blur-sm items-center">
+                        <div className="select-none font-sans w-70 md:w-100 bg-gradient-to-br from-blue-100 via-purple-200 to-purple-100 rounded-xl shadow-xl p-4 border border-blue-700">
+                            <p onClick={() => setComboDelete(false)} className="flex justify-end hover:cursor-pointer text-blue-900">❌</p>
+                            <p className="flex justify-center text-center font-semibold mb-2 text-blue-900">Are you sure to delete this combo? This action will permanently delete this combo.</p>
+                            <p className="text-blue-900 flex justify-center">Combo Name: {delComboName}</p>
+                            <div className="flex flex-row gap-x-2 justify-center">
+                                <div className="flex justify-center"><button onClick={handleComboDelete} className="bg-red-500 w-25 text-white rounded-lg mt-2 p-2 hover:bg-red-600 hover:scale-105 hover:cursor-pointer transition duration-300 ease-in-out">Delete</button></div>
+                                <div className="flex justify-center"><button onClick={() => setComboDelete(false)} className="bg-gray-500 w-25 text-white rounded-lg mt-2 p-2 hover:bg-gray-600 hover:scale-105 hover:cursor-pointer transition duration-300 ease-in-out">Cancel</button></div>
+                            </div>
                         </div>
                     </div>
                 }
