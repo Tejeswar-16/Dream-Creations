@@ -34,7 +34,7 @@
   }
 
   .animate-featured-slide {
-    animation: featured-slide 40s linear infinite;
+    animation: featured-slide 50s linear infinite;
   }
 }
 

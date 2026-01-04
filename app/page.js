@@ -23,6 +23,7 @@ export default function Home(){
   const [priceClick,setPriceClick] = useState(Array(6).fill(false));
   const [sortProduct,setSortProduct] = useState(Array(6).fill(false));
   const [searchProduct,setSearchProduct] = useState("");
+  const [combos,setCombos] = useState([]);
 
   const router = useRouter();
 
@@ -93,6 +94,27 @@ export default function Home(){
     fetchProducts();
   },[discCountClick,searchProduct,priceClick,sortProduct]);
 
+  useEffect(() => {
+    async function fetchCombos(){
+      try{
+          setLoading(true);
+          const q = query(
+              collection(db,"combos")
+          )
+          const querySnapshot = await getDocs(q);
+          const data = querySnapshot.docs.map((doc) => ({
+              docId: doc.id,
+              ...doc.data()
+          }));
+          setCombos(data);
+          setLoading(false);
+      }
+      catch(error){
+          alert(error);
+      }
+    }
+    fetchCombos();
+  },[]);
 
   async function handleAddToCart(id){
     try{
@@ -137,23 +159,52 @@ export default function Home(){
     }
   }
 
+  const replica = [...combos,...combos,...combos]
+
   const images = ["/products/featured 1.png","/products/featured 2.png","/products/featured 3.png","/products/featured 4.png","/products/featured 5.png"];
 
   return(
     <>
       <div className="relative bg-gradient-to-b from-purple-100 via-purple-100 to-blue-100 py-1 min-h-screen">
         <NavBar/>
+        { combos.length !== 0 &&
+          <div className="select-none mx-auto mb-10 p-4 border-2 border-blue-700 overflow-hidden bg-gradient-to-br from-blue-100 via-fuchsia-100 to-fuchsia-200 w-75 md:w-180 lg:w-250 xl:w-350 rounded-lg shadow-xl shadow-fuchsia-900 mb-5 transition duration-300 ease-in-out">
+            <h1 className='font-sans flex justify-center mb-4 font-bold text-blue-900 text-xl md:text-3xl'>Combo Offers</h1>
+            <div className='flex gap-6 w-max animate-featured-slide'>
+              {
+                replica.map((combo,index) => (
+                  <div onClick={() => router.push("/combo-checkout/"+combo.comboId)} key={index} className='hover:cursor-pointer flex gap-2 bg-gradient-to-br border-2 border-blue-700 rounded-lg p-2 from-blue-100 via-fuchsia-100 to-fuchsia-200'>
+                    {
+                      combo.products.map((product,index) => (
+                        <Image key={index} className="rounded-xl z-1" src={product.productImage} width={120} height={120} alt='combo-product'></Image>
+                      ))                     
+                    }
+                    <div className='flex flex-col w-50 justify-center font-sans items-center text-center text-blue-900 font-semibold'>
+                      <h1 className='text-xl text-red-900'>{combo.comboName}</h1>
+                      <h1 className='text-fuchsia-900'>{combo.products.map((p) => p.productName).join(", ")}</h1>
+                      <h1 className='text-sm line-through text-fuchsia-900'>₹{combo.actualPrice}</h1>
+                      <h1 className='text-xl text-pink-900'>₹{combo.comboPrice}</h1>
+                    </div>
+                  </div>
+                ))
+              } 
+            </div>
+          </div>
+        }
 
-        <div className="mx-auto mb-10 p-4 border-2 border-blue-700 overflow-hidden bg-gradient-to-br from-blue-100 via-fuchsia-100 to-fuchsia-200 w-75 md:w-180 lg:w-250 xl:w-350 rounded-lg shadow-xl shadow-fuchsia-900 mb-5 transition duration-300 ease-in-out">
-          <h1 className='font-sans flex justify-center mb-4 font-bold text-blue-900 text-xl md:text-3xl'>Featured Products</h1>
-          <div className="flex gap-6 w-max animate-featured-slide">
-            {
-              [...images,...images].map((image,index) => (
-                <Image key={index} className="rounded-xl z-1" src={image} width={500} height={100} alt='featured product'></Image>
-              ))
-            } 
-          </div> 
-        </div>
+        {
+          combos.length === 0 && 
+            <div className="mx-auto mb-10 p-4 border-2 border-blue-700 overflow-hidden bg-gradient-to-br from-blue-100 via-fuchsia-100 to-fuchsia-200 w-75 md:w-180 lg:w-250 xl:w-350 rounded-lg shadow-xl shadow-fuchsia-900 mb-5 transition duration-300 ease-in-out">
+              <h1 className='font-sans flex justify-center mb-4 font-bold text-blue-900 text-xl md:text-3xl'>Featured Products</h1>
+              <div className="flex gap-6 w-max animate-featured-slide">
+                {
+                  [...images,...images].map((image,index) => (
+                    <Image key={index} className="rounded-xl z-1" src={image} width={500} height={100} alt='featured product'></Image>
+                  ))
+                } 
+              </div> 
+            </div>
+        }
         
         <div className="mx-auto p-4 bg-gradient-to-br from-blue-100 via-fuchsia-100 to-fuchsia-200 w-75 md:w-180 lg:w-250 xl:w-350 rounded-lg shadow-xl shadow-fuchsia-900">
           <div className="md:top-20 flex flex-row justify-center items-center mt-0">

@@ -4,8 +4,8 @@ import { useParams, useRouter } from "next/navigation"
 import NavBar from '../../NavBar'
 import Footer from '../../Footer'
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
-import { addDoc, collection, doc, getDocs, query, serverTimestamp, Timestamp, updateDoc, where } from "firebase/firestore";
+import { useEffect, useState } from "react";
+import { addDoc, collection, doc, getDocs, query, serverTimestamp, updateDoc, where } from "firebase/firestore";
 import { auth, db } from "../../_util/config";
 import { onAuthStateChanged } from "firebase/auth";
 
