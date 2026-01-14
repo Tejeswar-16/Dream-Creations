@@ -1,2 +1,2 @@
 # Dream-Creations
-Web App for basic e-commerce
+Developed and deployed a full-stack e-commerce web application for a real client using Next.js, TailwindCSS and Firebase. The platform supports public product browsing, secure user authentication, cart and order management, and role-based access control implemented through Firestore security rules. The application is production-ready, responsive across devices, and actively used by customers, with an admin dashboard for product, order, and payment tracking.
