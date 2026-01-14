@@ -167,7 +167,7 @@ export default function AddCombo(){
                     <div className="flex flex-row justify-between">
                         <div className="flex flex-row justify-begin items-center gap-x-2">
                             <div onClick={() => router.push("/")} className="hover:cursor-pointer"><Image className="w-14" src={"/logo.png"} width={70} height={20} alt="logo"></Image></div>
-                            <h1 className="font-sans font-bold text-sm md:text-xl lg:text-2xl xl:text-3xl select-none text-blue-900">KANAVU CREATIONS ADMIN PANEL</h1>
+                            <h1 className="font-sans font-bold w-20 md:w-full text-sm md:text-xl lg:text-2xl xl:text-3xl select-none text-blue-900">KANAVU CREATIONS ADMIN PANEL</h1>
                         </div>
                         <div className="flex flex-col md:flex-row gap-y-1 justify-end items-center md:gap-x-4">
                             <button onClick={() => router.push("/adminpanel")} className="font-sans border text-sm md:text-lg font-semibold border-blue-800 bg-blue-800 text-purple-100 p-1 rounded-xl hover:bg-blue-900 hover:text-gray-100 hover:cursor-pointer transition duration-300 ease-in-out">Admin Dashboard</button>
@@ -273,10 +273,10 @@ export default function AddCombo(){
                             <p className="flex justify-center font-sans select-none font-bold text-xl mb-4 text-blue-900">Add Combo Offer</p>
                             <form onSubmit={(e) => {e.preventDefault();handleSubmit()}}>
                                 <div className="flex flex-col gap-y-2">
-                                    <input value={comboName} onChange={(e) => setComboName(e.target.value)} required type="text" className="mx-auto font-sans w-120 border rounded-xl p-2 border-blue-900 text-blue-900 font-semibold" placeholder="Combo Name"/>
-                                    <input value={comboPrice} onChange={(e) => setComboPrice(e.target.value)} required  type="number" className="mx-auto font-sans w-120 border rounded-xl p-2 border-blue-900 text-blue-900 font-semibold" placeholder="Combo Price"/>
+                                    <input value={comboName} onChange={(e) => setComboName(e.target.value)} required type="text" className="mx-auto font-sans md:w-120 border rounded-xl p-2 border-blue-900 text-blue-900 font-semibold" placeholder="Combo Name"/>
+                                    <input value={comboPrice} onChange={(e) => setComboPrice(e.target.value)} required  type="number" className="mx-auto font-sans md:w-120 border rounded-xl p-2 border-blue-900 text-blue-900 font-semibold" placeholder="Combo Price"/>
                                     <label className="w-120 mx-auto font-semibold text-blue-900">Select Products</label>
-                                    <div className="w-120 h-50 overflow-y-auto border border-blue-900 rounded-xl p-2 mx-auto font-semibold text-blue-900">
+                                    <div className="md:w-120 h-50 overflow-y-auto border border-blue-900 rounded-xl p-2 mx-auto font-semibold text-blue-900">
                                         {
                                             products.map((product) => (
                                                 <div key={product.id}>
