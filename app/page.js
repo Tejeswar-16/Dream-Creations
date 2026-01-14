@@ -32,6 +32,8 @@ export default function Home(){
           if (user){
               setUserName(user.displayName);
               setEmail(user.email);
+              if (user.email == "admin@kanavucreations.in")
+                router.push("/adminpanel");
               setIsLoggedIn(true);
           }
       });
