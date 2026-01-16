@@ -274,6 +274,7 @@ export default function AdminPanel(){
                                                 <tr>
                                                     <th className="font-sans p-2 font-semibold border border-gray-400">Product Name</th>
                                                     <th className="font-sans p-2 font-semibold border border-gray-400">Quantity</th>
+                                                    <th className="font-sans p-2 font-semibold border border-gray-400">Amount</th>
                                                     <th className="font-sans p-2 font-semibold border border-gray-400">Date of Order</th>
                                                     <th className="font-sans p-2 font-semibold border border-gray-400">Customer Name</th>
                                                     <th className="font-sans p-2 font-semibold border border-gray-400">Customer Mobile</th>
@@ -291,6 +292,7 @@ export default function AdminPanel(){
                                                         <tr key={index} className="hover:bg-purple-100 transition duration-300 ease-in-out">
                                                             <td className="font-sans p-2 border border-black">{order.productName}</td>
                                                             <td className="font-sans p-2 border border-black">{order.quantity}</td>
+                                                            <td className="font-sans p-2 border border-black">{order.totalAmount}</td>
                                                             <td className="font-sans p-2 border border-black">{order.date}</td>
                                                             <td className="font-sans p-2 border border-black">{order.customerName}</td>
                                                             <td className="font-sans p-2 border border-black">{order.customerMobile}</td>

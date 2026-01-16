@@ -59,6 +59,7 @@ export default function Checkout(){
                 orderId: product.id + email.split("@")[0],
                 productName: product.productName,
                 quantity: quantity,
+                totalAmount: (Number(product.discountPrice*quantity)+40).toFixed(2),
                 customerName: userName,
                 customerEmail: email,
                 customerMobile: mobile,

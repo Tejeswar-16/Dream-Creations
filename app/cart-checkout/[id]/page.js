@@ -81,6 +81,7 @@ export default function CartCheckout(){
                 orderId: cartProd.map((p) => p.id).join("") + email.split("@")[0],
                 productName: cartProd.map((p) => p.productName).join(", "),
                 quantity: quantity,
+                totalAmount: ((cartAmount*quantity)+40).toFixed(2),
                 customerName: userName,
                 customerEmail: email,
                 customerMobile: mobile,
@@ -96,7 +97,7 @@ export default function CartCheckout(){
             const upi = generateUPIQR({
                 upiId: "lhema2889-1@okicici",
                 name: "Kanavu Creations",
-                amount: (Number(combo.comboPrice*quantity)+40).toFixed(2)
+                amount: ((cartAmount*quantity)+40).toFixed(2)
             });
 
             const qr = await QRCode.toDataURL(upi);

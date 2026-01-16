@@ -66,6 +66,7 @@ export default function ComboCheckout(){
                 orderId: combo.comboId + email.split("@")[0],
                 productName: combo.comboName + ": " + combo.products.map((p) => p.productName).join(", "),
                 quantity: quantity,
+                totalAmount: (Number(combo.comboPrice*quantity)+40).toFixed(2),
                 customerName: userName,
                 customerEmail: email,
                 customerMobile: mobile,
