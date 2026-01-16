@@ -15,7 +15,7 @@ export default function Cart(){
     const [cartProd,setCartProd] = useState([]);
     const [userName,setUserName] = useState("");
     const [email,setEmail] = useState("");
-    const [loading,setLoading] = useState(true);    
+    const [loading,setLoading] = useState(true);
 
     const router = useRouter();
 
@@ -76,6 +76,11 @@ export default function Cart(){
         }
     }
 
+    let cartAmount = 0;
+    for (const prod of cartProd){
+        cartAmount += Number(prod.discountPrice)*Number(prod.quantity);
+    }
+
     return (
         <>
             <div className="relative bg-gradient-to-b from-purple-100 via-purple-100 to-blue-100 py-1 min-h-screen">
@@ -108,16 +113,21 @@ export default function Cart(){
                                                     <td className="font-sans md:text-lg p-2 border border-black hover:cursor-pointer"><Image onClick={() => router.push("/products/"+product.id)} src={product.images[0]} width={200} height={100} alt="cart-img"/></td>
                                                     <td className="font-sans md:text-lg p-2 border border-black">{product.productName}</td>
                                                     <td className="font-sans md:text-lg p-2 border border-black">{product.productDescription}</td>
-                                                    <td className="font-sans md:text-lg p-2 border border-black">{Number(product.discountPrice)*Number(product.quantity)}.00</td>
+                                                    <td className="font-sans md:text-lg p-2 border border-black">{(Number(product.discountPrice)*Number(product.quantity)).toFixed(2)}</td>
                                                     <td className="font-sans md:text-lg p-2 border border-black"><button onClick={() => router.push("/checkout/"+product.id)} className="bg-blue-300 rounded-xl p-1 hover:bg-blue-400 hover:cursor-pointer transition duration-300 ease-in-out">Buy Now</button></td>
                                                     <td className="font-sans md:text-lg p-2 border border-black"><MdDelete onClick={() => handleDelete(product.cartDocId)} className="mx-auto text-3xl text-red-500 hover:cursor-pointer transition duration-300 ease-in-out"/></td>
                                                 </tr>
                                             ))
                                         }
                                     </tbody>
-                                </table>
+                                </table>    
                             </div>
                     }
+                    <div className="flex flex-row justify-center mt-5">
+                        <h1 className="font-sans md:text-2xl p-2 font-semibold">Total {cartProd.length} items: </h1>
+                        <h1 className="font-sans md:text-2xl p-2 font-semibold">₹{cartAmount.toFixed(2)}</h1>
+                        <h1 className="font-sans md:text-lg p-2"><button onClick={() => router.push("/cart-checkout/"+Math.floor(100000 + Math.random() * 900000))} className="bg-blue-700 text-white rounded-xl p-1 hover:bg-blue-800 hover:cursor-pointer transition duration-300 ease-in-out">Checkout</button></h1>
+                    </div>
                 </div>
                 {
                     loading && 
