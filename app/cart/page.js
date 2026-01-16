@@ -94,38 +94,40 @@ export default function Cart(){
                         ?
                             <h1 className="flex justify-center font-sans text-lg text-blue-900">Cart is empty</h1>
                         :
-                            <div className="overflow-hidden border border-gray-300 mx-auto overflow-x-auto border border-black md:w-150">
-                                <table className="mx-auto text-center">
-                                    <thead className="bg-blue-950 text-white">
-                                        <tr>
-                                            <th className="font-sans p-2 font-semibold border border-gray-400">Product</th>
-                                            <th className="font-sans p-2 font-semibold border border-gray-400">Product Name</th>
-                                            <th className="font-sans p-2 font-semibold border border-gray-400">Price</th>
-                                            <th className="font-sans p-2 font-semibold border border-gray-400">Action</th>
-                                            <th className="font-sans p-2 font-semibold border border-gray-400">Remove</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {
-                                            cartProd.map((product,index) => (
-                                                <tr key={index} className="hover:bg-purple-100 transition duration-300 ease-in-out">
-                                                    <td className="font-sans md:text-lg p-2 border border-black hover:cursor-pointer"><Image onClick={() => router.push("/products/"+product.id)} src={product.images[0]} width={200} height={100} alt="cart-img"/></td>
-                                                    <td className="font-sans md:text-lg p-2 border border-black">{product.productName}</td>
-                                                    <td className="font-sans md:text-lg p-2 border border-black">{(Number(product.discountPrice)*Number(product.quantity)).toFixed(2)}</td>
-                                                    <td className="font-sans md:text-lg p-2 border border-black"><button onClick={() => router.push("/checkout/"+product.id)} className="bg-blue-300 rounded-xl p-1 hover:bg-blue-400 hover:cursor-pointer transition duration-300 ease-in-out">Buy Now</button></td>
-                                                    <td className="font-sans md:text-lg p-2 border border-black"><MdDelete onClick={() => handleDelete(product.cartDocId)} className="mx-auto text-3xl text-red-500 hover:cursor-pointer transition duration-300 ease-in-out"/></td>
-                                                </tr>
-                                            ))
-                                        }
-                                    </tbody>
-                                </table>    
-                            </div>
+                            <>
+                                <div className="overflow-hidden border border-gray-300 mx-auto overflow-x-auto border border-black md:w-150">
+                                    <table className="mx-auto text-center">
+                                        <thead className="bg-blue-950 text-white">
+                                            <tr>
+                                                <th className="font-sans p-2 font-semibold border border-gray-400">Product</th>
+                                                <th className="font-sans p-2 font-semibold border border-gray-400">Product Name</th>
+                                                <th className="font-sans p-2 font-semibold border border-gray-400">Price</th>
+                                                <th className="font-sans p-2 font-semibold border border-gray-400">Action</th>
+                                                <th className="font-sans p-2 font-semibold border border-gray-400">Remove</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {
+                                                cartProd.map((product,index) => (
+                                                    <tr key={index} className="hover:bg-purple-100 transition duration-300 ease-in-out">
+                                                        <td className="font-sans md:text-lg p-2 border border-black hover:cursor-pointer"><Image onClick={() => router.push("/products/"+product.id)} src={product.images[0]} width={200} height={100} alt="cart-img"/></td>
+                                                        <td className="font-sans md:text-lg p-2 border border-black">{product.productName}</td>
+                                                        <td className="font-sans md:text-lg p-2 border border-black">{(Number(product.discountPrice)*Number(product.quantity)).toFixed(2)}</td>
+                                                        <td className="font-sans md:text-lg p-2 border border-black"><button onClick={() => router.push("/checkout/"+product.id)} className="bg-blue-300 rounded-xl p-1 hover:bg-blue-400 hover:cursor-pointer transition duration-300 ease-in-out">Buy Now</button></td>
+                                                        <td className="font-sans md:text-lg p-2 border border-black"><MdDelete onClick={() => handleDelete(product.cartDocId)} className="mx-auto text-3xl text-red-500 hover:cursor-pointer transition duration-300 ease-in-out"/></td>
+                                                    </tr>
+                                                ))
+                                            }
+                                        </tbody>
+                                    </table>    
+                                </div>
+                                <div className="flex flex-row justify-center mt-5">
+                                    <h1 className="font-sans md:text-2xl p-2 font-semibold">Total {cartProd.length} items: </h1>
+                                    <h1 className="font-sans md:text-2xl p-2 font-semibold">₹{cartAmount.toFixed(2)}</h1>
+                                    <h1 className="font-sans md:text-lg p-2"><button onClick={() => router.push("/cart-checkout/"+Math.floor(100000 + Math.random() * 900000))} className="bg-blue-700 text-white rounded-xl p-1 hover:bg-blue-800 hover:cursor-pointer transition duration-300 ease-in-out">Checkout</button></h1>
+                                </div>
+                            </>
                     }
-                    <div className="flex flex-row justify-center mt-5">
-                        <h1 className="font-sans md:text-2xl p-2 font-semibold">Total {cartProd.length} items: </h1>
-                        <h1 className="font-sans md:text-2xl p-2 font-semibold">₹{cartAmount.toFixed(2)}</h1>
-                        <h1 className="font-sans md:text-lg p-2"><button onClick={() => router.push("/cart-checkout/"+Math.floor(100000 + Math.random() * 900000))} className="bg-blue-700 text-white rounded-xl p-1 hover:bg-blue-800 hover:cursor-pointer transition duration-300 ease-in-out">Checkout</button></h1>
-                    </div>
                 </div>
                 {
                     loading && 
