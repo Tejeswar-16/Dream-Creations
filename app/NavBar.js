@@ -7,6 +7,7 @@ import { MdOutlineShoppingCart  } from "react-icons/md";
 import { BsPersonSquare } from "react-icons/bs";
 import { auth } from ".//_util/config.js"
 import { createUserWithEmailAndPassword, onAuthStateChanged, sendPasswordResetEmail, signInWithEmailAndPassword, signOut, updateProfile } from "firebase/auth";
+import { AiFillEye, AiFillEyeInvisible  } from "react-icons/ai";
 
 export default function NavBar(){
     const [signIn,setSignIn] = useState(false);
@@ -26,6 +27,9 @@ export default function NavBar(){
     const [notLoggedIn,setNotLoggedIn] = useState(false);
     const [forgotPassword,setForgotPassword] = useState(false);
     const [forgotEmail,setForgotEmail] = useState("");
+    const [showPassword,setShowPassword] = useState(false);
+    const [signUpShowPassword,setSignUpShowPassword] = useState(false);
+    const [signUpCfmShowPassword,setSignUpCfmShowPassword] = useState(false);
 
     const router = useRouter();
 
@@ -163,7 +167,22 @@ export default function NavBar(){
                         <form onSubmit={(e) => {e.preventDefault();signInWithFirebase(signInEmail,signInPassword)}}>
                             <div className="flex flex-col">
                                 <input value={signInEmail} onChange={(e) => setSignInEmail(e.target.value)} required className="font-sans p-2 rounded-lg mx-4 mt-4 mb-2 text-blue-900 border border-blue-700 h-10" type="email" placeholder="Email"/>
-                                <input value={signInPassword} onChange={(e) => setSignInPassword(e.target.value)} required className="font-sans p-2 rounded-lg mx-4 text-blue-900 border border-blue-700 h-10" type="password" placeholder="Password"/>
+                                <div className="relative">
+                                    <input value={signInPassword} 
+                                       onChange={(e) => setSignInPassword(e.target.value)} 
+                                       required 
+                                       className="font-sans p-2 rounded-lg mx-4 w-56 md:w-71 text-blue-900 border border-blue-700 h-10" 
+                                       type={showPassword ? "text" : "password"}
+                                       placeholder="Password"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        className="absolute right-4 top-0 h-10 text-xl border-t border-b rounded-r-lg p-2 items-center border-blue-700 text-blue-700 hover:text-blue-900 cursor-pointer"
+                                    >
+                                        {showPassword ? <AiFillEye /> : <AiFillEyeInvisible />}
+                                    </button>
+                                </div>
                                 <button type="submit" className={(signInEmail === "" || signInPassword === "") ? "font-sans rounded-lg mt-4 mx-4 border-2 border-blue-900 bg-blue-900 text-purple-100 text-xl h-10 hover:cursor-not-allowed" : "font-sans rounded-lg mt-4 mx-4 text-purple-100 text-xl bg-blue-900 h-10 hover:cursor-pointer"}>Sign In</button>
                             </div>
                         </form>
@@ -186,8 +205,28 @@ export default function NavBar(){
                             <div className="flex flex-col">
                                 <input value={signUpName} onChange={(e) => setSignUpName((e.target.value).toUpperCase())} required className="font-sans p-2 rounded-lg m-4 text-blue-900 border border-blue-700 h-10" type="text" placeholder="Name"/>
                                 <input value={signUpEmail} onChange={(e) => {setSignUpEmail(e.target.value)}} required className="font-sans p-2 rounded-lg mx-4 text-blue-900 mb-4 border border-blue-700 h-10" type="email" placeholder="Email"/>
-                                <input value={signUpPassword} onChange={(e) => {setSignUpPassword(e.target.value);handlePasswordCheck(e.target.value,signUpConfirmPassword)}} required className="font-sans p-2 rounded-lg mx-4 mb-4 text-blue-900 border border-blue-700 h-10" type="password" placeholder="Password"/>
-                                <input value={signUpConfirmPassword} onChange={(e) => {setSignUpConfirmPassword(e.target.value);handlePasswordCheck(signUpPassword,e.target.value)}} required className="font-sans p-2 rounded-lg mx-4 text-blue-900 border border-blue-700 h-10" type="password" placeholder="Confirm Password"/>
+                                <div className="relative">
+                                    <input value={signUpPassword} 
+                                           onChange={(e) => {setSignUpPassword(e.target.value);handlePasswordCheck(e.target.value,signUpConfirmPassword)}} 
+                                           required 
+                                           className="font-sans p-2 w-61 md:w-111 rounded-lg mx-4 mb-4 text-blue-900 border border-blue-700 h-10" 
+                                           type={signUpShowPassword ? "text" : "password"}
+                                           placeholder="Password"/>
+                                    <button type="button"
+                                            onClick={() => setSignUpShowPassword(!signUpShowPassword)}
+                                            className="absolute right-4 top-0 h-10 text-xl border-b border-t rounded-r-lg p-2 items-center border-blue-700 text-blue-700 hover:text-blue-900 cursor-pointer">{signUpShowPassword ? <AiFillEye /> : <AiFillEyeInvisible />}</button>
+                                </div>
+                                <div className="relative">
+                                    <input value={signUpConfirmPassword} 
+                                           onChange={(e) => {setSignUpConfirmPassword(e.target.value);handlePasswordCheck(signUpPassword,e.target.value)}} 
+                                           required 
+                                           className="font-sans p-2 w-61 md:w-111 rounded-lg mx-4 text-blue-900 border border-blue-700 h-10" 
+                                           type={signUpCfmShowPassword ? "text" : "password"}
+                                           placeholder="Confirm Password"/>
+                                    <button type="button"
+                                            onClick={() => setSignUpCfmShowPassword(!signUpCfmShowPassword)}
+                                            className="absolute right-4 top-0 h-10 text-xl border-b border-t rounded-r-lg p-2 items-center border-blue-700 text-blue-700 hover:text-blue-900 cursor-pointer">{signUpCfmShowPassword ? <AiFillEye /> : <AiFillEyeInvisible />}</button>
+                                </div>
                                 <label className="font-sans mx-4 mt-2 text-sm text-red-500">{pwdError}</label>
                                 <button type="submit" className={(signUpName === "" || signUpEmail === "" || signUpPassword === "" || signUpConfirmPassword === "") ? "font-sans rounded-lg m-4 border-2 text-xl border-blue-900 bg-blue-900 text-purple-100 h-10 hover:cursor-not-allowed" : "font-sans rounded-lg m-4 text-purple-100 text-xl bg-blue-900 text-xl h-10 hover:cursor-pointer"}>Sign Up</button>
                             </div>
